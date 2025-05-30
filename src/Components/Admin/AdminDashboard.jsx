@@ -1,14 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FiArrowLeft, FiUser } from 'react-icons/fi';
 import Tiles from './Components/Tiles';
 import Activities from './Components/Activities';
+import ManageItems from './Components/ManageItems';
+import Report from './Components/Report';
+import User from './Components/User';
 
 function AdminDashboard() {
+  const [activeTab, setActiveTab] = useState('overview');
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'overview':
+        return (
+          <div className="space-y-6">
+            <Tiles />
+            <Activities />
+          </div>
+        );
+      case 'manage':
+        return <ManageItems />;
+      case 'reports':
+        return <Report />;
+      case 'users':
+        return <User />;
+      default:
+        return null;
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#e9f0ff]">
       {/* Header */}
       <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             {/* Logo and Admin Badge */}
             <div className="flex items-center gap-4">
@@ -35,9 +60,9 @@ function AdminDashboard() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="container mx-auto px-4 py-8">
         {/* Back Button */}
-        <div className="mb-8">
+        <div className="mb-6">
           <a href="/dashboard" className="inline-flex items-center text-blue-600 hover:text-blue-800">
             <FiArrowLeft className="w-4 h-4 mr-2" />
             Back to Dashboard
@@ -45,33 +70,60 @@ function AdminDashboard() {
         </div>
 
         {/* Dashboard Header */}
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold text-gray-900">Admin Dashboard</h2>
+        <div className="mb-6">
+          <h2 className="text-3xl font-bold text-[#1E3A8A]">Admin Dashboard</h2>
           <p className="mt-2 text-gray-600">Manage and monitor the Lost & Found system</p>
         </div>
 
         {/* Navigation Tabs */}
-        <div className="mb-8 border-b">
+        <div className="mb-6 border-b border-gray-200">
           <nav className="flex gap-8">
-            <a href="#" className="px-1 py-4 text-blue-600 border-b-2 border-blue-600 -mb-px">
+            <button
+              onClick={() => setActiveTab('overview')}
+              className={`px-1 py-4 ${
+                activeTab === 'overview'
+                  ? 'text-blue-600 border-b-2 border-blue-600 -mb-px'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
               Overview
-            </a>
-            <a href="#" className="px-1 py-4 text-gray-500 hover:text-gray-700">
+            </button>
+            <button
+              onClick={() => setActiveTab('manage')}
+              className={`px-1 py-4 ${
+                activeTab === 'manage'
+                  ? 'text-blue-600 border-b-2 border-blue-600 -mb-px'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
               Manage Items
-            </a>
-            <a href="#" className="px-1 py-4 text-gray-500 hover:text-gray-700">
+            </button>
+            <button
+              onClick={() => setActiveTab('reports')}
+              className={`px-1 py-4 ${
+                activeTab === 'reports'
+                  ? 'text-blue-600 border-b-2 border-blue-600 -mb-px'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
               Reports
-            </a>
-            <a href="#" className="px-1 py-4 text-gray-500 hover:text-gray-700">
+            </button>
+            <button
+              onClick={() => setActiveTab('users')}
+              className={`px-1 py-4 ${
+                activeTab === 'users'
+                  ? 'text-blue-600 border-b-2 border-blue-600 -mb-px'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
               Users
-            </a>
+            </button>
           </nav>
         </div>
 
         {/* Dashboard Content */}
-        <div className="space-y-8">
-          <Tiles />
-          <Activities />
+        <div className="w-full overflow-hidden">
+          {renderContent()}
         </div>
       </main>
     </div>
