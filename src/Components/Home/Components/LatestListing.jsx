@@ -1,6 +1,106 @@
 import React, { useState } from "react";
 import { FaMapMarkerAlt, FaCalendarAlt, FaTag } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
+// Separate ItemCard component
+const ItemCard = ({ item, type }) => (
+  <div className='card bg-base-100 border border-base-200 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 max-w-sm group'>
+    <figure className='h-40 overflow-hidden'>
+      <img
+        src={item.image}
+        alt={item.title}
+        className='w-full h-full object-cover group-hover:scale-105 transition-transform duration-300'
+      />
+    </figure>
+    <div className='card-body p-4'>
+      <div className='flex items-center justify-between mb-2'>
+        <h3 className='text-base font-semibold text-base-content line-clamp-1'>
+          {item.title}
+        </h3>
+        <span
+          className={`badge ${
+            type === "lost" ? "badge-error" : "badge-success"
+          }`}
+        >
+          {type === "lost" ? "Lost" : "Found"}
+        </span>
+      </div>
+      <ItemDetails item={item} />
+      <div className='card-actions justify-end mt-4'>
+        <Link
+          to={`/${type}-items/${item.id}`}
+          className='btn btn-primary btn-sm w-full'
+        >
+          View Details
+        </Link>
+      </div>
+    </div>
+  </div>
+);
+
+// Separate ItemDetails component
+const ItemDetails = ({ item }) => (
+  <div className='space-y-2 text-sm text-base-content/70'>
+    <div className='flex items-center gap-2'>
+      <FaTag className='text-primary' />
+      <span>{item.category}</span>
+    </div>
+    <div className='flex items-center gap-2'>
+      <FaMapMarkerAlt className='text-primary' />
+      <span>{item.location}</span>
+    </div>
+    <div className='flex items-center gap-2'>
+      <FaCalendarAlt className='text-primary' />
+      <span>{new Date(item.date).toLocaleDateString()}</span>
+    </div>
+  </div>
+);
+
+// Separate SectionHeader component
+const SectionHeader = ({ title, viewAllLink }) => (
+  <div className='flex items-center gap-4 mb-6'>
+    <h2 className='text-xl font-semibold text-base-content'>{title}</h2>
+    <div className='h-px flex-1 bg-base-300'></div>
+    <Link
+      to={viewAllLink}
+      className='text-sm text-primary hover:text-primary-focus transition-colors'
+    >
+      View All →
+    </Link>
+  </div>
+);
+
+// Separate LoadingSkeleton component
+const LoadingSkeleton = () => (
+  <div className='max-w-6xl mx-auto px-4 py-12'>
+    <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
+      {[1, 2].map((i) => (
+        <div key={i} className='animate-pulse'>
+          <div className='h-8 bg-base-300 rounded w-1/3 mb-6'></div>
+          <div className='space-y-4'>
+            {[1, 2].map((j) => (
+              <div key={j} className='card bg-base-200 h-48'></div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+// Separate ItemsSection component
+const ItemsSection = ({ title, items, type, viewAllLink }) => (
+  <div className='first:pl-24 last:pr-24 '>
+    <SectionHeader title={title} viewAllLink={viewAllLink} />
+    <div className='grid gap-4'>
+      {items.map((item) => (
+        <ItemCard key={item.id} item={item} type={type} />
+      ))}
+    </div>
+  </div>
+);
+
+// Main component
 const LatestListing = () => {
   const [isLoading] = useState(false);
 
@@ -47,108 +147,25 @@ const LatestListing = () => {
     },
   ];
 
-  const ItemCard = ({ item, type }) => (
-    <div className='card bg-base-100 border border-base-200 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 max-w-sm group'>
-      <figure className='h-40 overflow-hidden'>
-        <img
-          src={item.image}
-          alt={item.title}
-          className='w-full h-full object-cover group-hover:scale-105 transition-transform duration-300'
-        />
-      </figure>
-      <div className='card-body p-4'>
-        <div className='flex items-center justify-between mb-2'>
-          <h3 className='text-base font-semibold text-base-content line-clamp-1'>
-            {item.title}
-          </h3>
-          <span
-            className={`badge ${
-              type === "lost" ? "badge-error" : "badge-success"
-            }`}
-          >
-            {type === "lost" ? "Lost" : "Found"}
-          </span>
-        </div>
-        <div className='space-y-2 text-sm text-base-content/70'>
-          <div className='flex items-center gap-2'>
-            <FaTag className='text-primary' />
-            <span>{item.category}</span>
-          </div>
-          <div className='flex items-center gap-2'>
-            <FaMapMarkerAlt className='text-primary' />
-            <span>{item.location}</span>
-          </div>
-          <div className='flex items-center gap-2'>
-            <FaCalendarAlt className='text-primary' />
-            <span>{new Date(item.date).toLocaleDateString()}</span>
-          </div>
-        </div>
-        <div className='card-actions justify-end mt-4'>
-          <a
-            href={`/${type}-items/${item.id}`}
-            className='btn btn-primary btn-sm w-full'
-          >
-            View Details
-          </a>
-        </div>
-      </div>
-    </div>
-  );
-
-  const SectionHeader = ({ title, viewAllLink }) => (
-    <div className='flex items-center gap-4 mb-6'>
-      <h2 className='text-xl font-semibold text-base-content'>{title}</h2>
-      <div className='h-px flex-1 bg-base-300'></div>
-      <a
-        href={viewAllLink}
-        className='text-sm text-primary hover:text-primary-focus transition-colors'
-      >
-        View All →
-      </a>
-    </div>
-  );
-
   if (isLoading) {
-    return (
-      <div className='max-w-6xl mx-auto px-4 py-12'>
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
-          {[1, 2].map((i) => (
-            <div key={i} className='animate-pulse'>
-              <div className='h-8 bg-base-300 rounded w-1/3 mb-6'></div>
-              <div className='space-y-4'>
-                {[1, 2].map((j) => (
-                  <div key={j} className='card bg-base-200 h-48'></div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
+    return <LoadingSkeleton />;
   }
 
   return (
     <div className='max-w-6xl mx-auto px-4 py-12'>
       <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
-        {/* Lost Items Section */}
-        <div>
-          <SectionHeader title='Lost Items' viewAllLink='/lost-items' />
-          <div className='grid gap-6'>
-            {lostItems.map((item) => (
-              <ItemCard key={item.id} item={item} type='lost' />
-            ))}
-          </div>
-        </div>
-
-        {/* Found Items Section */}
-        <div>
-          <SectionHeader title='Found Items' viewAllLink='/found-items' />
-          <div className='grid gap-6'>
-            {foundItems.map((item) => (
-              <ItemCard key={item.id} item={item} type='found' />
-            ))}
-          </div>
-        </div>
+        <ItemsSection
+          title='Lost Items'
+          items={lostItems}
+          type='lost'
+          viewAllLink='/lost-items'
+        />
+        <ItemsSection
+          title='Found Items'
+          items={foundItems}
+          type='found'
+          viewAllLink='/found-items'
+        />
       </div>
     </div>
   );
