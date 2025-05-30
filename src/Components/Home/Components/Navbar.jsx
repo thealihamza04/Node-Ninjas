@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
@@ -7,41 +8,37 @@ const Navbar = () => {
         <div className='flex justify-between h-20 items-center'>
           {/* Logo */}
           <div className='flex-shrink-0'>
-            <a href='/' className='text-3xl font-serif font-bold text-primary'>
-              NodeNinjas
-            </a>
+            <Link to='/'>
+              <a className='text-3xl font-serif font-bold text-primary'>
+                NodeNinjas
+              </a>
+            </Link>
           </div>
 
           {/* Navigation Links */}
           <div className='hidden md:block'>
             <div className='ml-10 flex items-center space-x-8'>
-              <a
-                href='/'
-                className='text-base-content hover:text-primary px-3 py-2 text-sm font-medium transition-colors duration-200'
-              >
-                Home
-              </a>
-              <a
-                href='/lost-items'
+              <Link
+                to='/lostItems'
                 className='text-base-content hover:text-primary px-3 py-2 text-sm font-medium transition-colors duration-200'
               >
                 Lost Items
-              </a>
-              <a
-                href='/found-items'
+              </Link>
+              <Link
+                to='/foundItems'
                 className='text-base-content hover:text-primary px-3 py-2 text-sm font-medium transition-colors duration-200'
               >
                 Found Items
-              </a>
-              <a
-                href='/dashboard'
+              </Link>
+              <Link
+                to='/dashboard'
                 className='text-base-content hover:text-primary px-3 py-2 text-sm font-medium transition-colors duration-200'
               >
                 Dashboard
-              </a>
-              <a href='/login' className='btn btn-primary btn-sm'>
+              </Link>
+              <Link to='/login' className='btn btn-primary btn-sm'>
                 Login/Signup
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -77,33 +74,27 @@ const Navbar = () => {
       {/* Mobile menu */}
       <div className='md:hidden hidden' id='mobile-menu'>
         <div className='px-2 pt-2 pb-3 space-y-1 sm:px-3'>
-          <a
-            href='/'
-            className='text-base-content hover:text-primary block px-3 py-2 text-base font-medium transition-colors duration-200'
-          >
-            Home
-          </a>
-          <a
-            href='/lost-items'
+          <Link
+            to='/lost-items'
             className='text-base-content hover:text-primary block px-3 py-2 text-base font-medium transition-colors duration-200'
           >
             Lost Items
-          </a>
-          <a
-            href='/found-items'
+          </Link>
+          <Link
+            to='/found-items'
             className='text-base-content hover:text-primary block px-3 py-2 text-base font-medium transition-colors duration-200'
           >
             Found Items
-          </a>
-          <a
-            href='/dashboard'
+          </Link>
+          <Link
+            to='/dashboard'
             className='text-base-content hover:text-primary block px-3 py-2 text-base font-medium transition-colors duration-200'
           >
             Dashboard
-          </a>
-          <a href='/login' className='btn btn-primary btn-block'>
+          </Link>
+          <Link to='/login' className='btn btn-primary btn-block'>
             Login/Signup
-          </a>
+          </Link>
         </div>
       </div>
     </nav>
