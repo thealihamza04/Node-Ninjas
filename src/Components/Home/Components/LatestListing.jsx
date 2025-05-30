@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
+import { FaMapMarkerAlt, FaCalendarAlt, FaTag } from "react-icons/fa";
 
 const LatestListing = () => {
+  const [isLoading] = useState(false);
+
   // Sample data - replace with actual data from your backend
   const lostItems = [
     {
@@ -45,61 +48,92 @@ const LatestListing = () => {
   ];
 
   const ItemCard = ({ item, type }) => (
-    <div className='card bg-base-100 border border-base-200 rounded-md shadow-sm hover:shadow-md transition-shadow duration-300 max-w-sm'>
-      <figure className='h-32 overflow-hidden'>
+    <div className='card bg-base-100 border border-base-200 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 max-w-sm group'>
+      <figure className='h-40 overflow-hidden'>
         <img
           src={item.image}
           alt={item.title}
-          className='w-full h-full object-cover'
+          className='w-full h-full object-cover group-hover:scale-105 transition-transform duration-300'
         />
       </figure>
-      <div className='card-body p-3'>
-        <div className='flex items-center justify-between mb-1'>
-          <h3 className='text-sm font-medium text-base-content'>
+      <div className='card-body p-4'>
+        <div className='flex items-center justify-between mb-2'>
+          <h3 className='text-base font-semibold text-base-content line-clamp-1'>
             {item.title}
           </h3>
           <span
-            className={`text-xs ${
-              type === "lost" ? "text-error" : "text-success"
+            className={`badge ${
+              type === "lost" ? "badge-error" : "badge-success"
             }`}
           >
             {type === "lost" ? "Lost" : "Found"}
           </span>
         </div>
-        <div className='text-xs text-base-content/70 space-y-0.5 mb-2'>
-          <p>
-            {item.category} • {item.location}
-          </p>
-          <p>{new Date(item.date).toLocaleDateString()}</p>
+        <div className='space-y-2 text-sm text-base-content/70'>
+          <div className='flex items-center gap-2'>
+            <FaTag className='text-primary' />
+            <span>{item.category}</span>
+          </div>
+          <div className='flex items-center gap-2'>
+            <FaMapMarkerAlt className='text-primary' />
+            <span>{item.location}</span>
+          </div>
+          <div className='flex items-center gap-2'>
+            <FaCalendarAlt className='text-primary' />
+            <span>{new Date(item.date).toLocaleDateString()}</span>
+          </div>
         </div>
-        <a
-          href={`/${type}-items/${item.id}`}
-          className='btn btn-outline btn-primary btn-xs w-full'
-        >
-          View Details
-        </a>
+        <div className='card-actions justify-end mt-4'>
+          <a
+            href={`/${type}-items/${item.id}`}
+            className='btn btn-primary btn-sm w-full'
+          >
+            View Details
+          </a>
+        </div>
       </div>
     </div>
   );
+
+  const SectionHeader = ({ title, viewAllLink }) => (
+    <div className='flex items-center gap-4 mb-6'>
+      <h2 className='text-xl font-semibold text-base-content'>{title}</h2>
+      <div className='h-px flex-1 bg-base-300'></div>
+      <a
+        href={viewAllLink}
+        className='text-sm text-primary hover:text-primary-focus transition-colors'
+      >
+        View All →
+      </a>
+    </div>
+  );
+
+  if (isLoading) {
+    return (
+      <div className='max-w-6xl mx-auto px-4 py-12'>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
+          {[1, 2].map((i) => (
+            <div key={i} className='animate-pulse'>
+              <div className='h-8 bg-base-300 rounded w-1/3 mb-6'></div>
+              <div className='space-y-4'>
+                {[1, 2].map((j) => (
+                  <div key={j} className='card bg-base-200 h-48'></div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className='max-w-6xl mx-auto px-4 py-12'>
       <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
         {/* Lost Items Section */}
         <div>
-          <div className='flex items-center gap-4 mb-6'>
-            <h2 className='text-xl font-medium text-base-content'>
-              Lost Items
-            </h2>
-            <div className='h-px flex-1 bg-base-300'></div>
-            <a
-              href='/lost-items'
-              className='text-xs text-primary hover:underline'
-            >
-              View All →
-            </a>
-          </div>
-          <div className='grid gap-4'>
+          <SectionHeader title='Lost Items' viewAllLink='/lost-items' />
+          <div className='grid gap-6'>
             {lostItems.map((item) => (
               <ItemCard key={item.id} item={item} type='lost' />
             ))}
@@ -108,19 +142,8 @@ const LatestListing = () => {
 
         {/* Found Items Section */}
         <div>
-          <div className='flex items-center gap-4 mb-6'>
-            <h2 className='text-xl font-medium text-base-content'>
-              Found Items
-            </h2>
-            <div className='h-px flex-1 bg-base-300'></div>
-            <a
-              href='/found-items'
-              className='text-xs text-primary hover:underline'
-            >
-              View All →
-            </a>
-          </div>
-          <div className='grid gap-4'>
+          <SectionHeader title='Found Items' viewAllLink='/found-items' />
+          <div className='grid gap-6'>
             {foundItems.map((item) => (
               <ItemCard key={item.id} item={item} type='found' />
             ))}
