@@ -10,6 +10,7 @@ import Navbar from "./Components/Home/Components/Navbar";
 import LostItemsPage from "./Components/LostItems/LostItemsPage";
 import Footer from "./Components/Home/Components/Footer";
 import ItemDetail from "./Components/ItemDetails/ItemDetail";
+import UserDashboard from "./Components/User/UserDashboard";
 
 const App = () => {
   return (
@@ -26,8 +27,10 @@ const App = () => {
         <Route path='/lostItems/:id' element={<ItemDetail />} />
         <Route path='*' element={<PageNotFound />} />
       </Routes>
+      
       <Footer />
     </BrowserRouter>
+
   );
 };
 
