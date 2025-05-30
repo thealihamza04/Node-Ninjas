@@ -2,12 +2,12 @@ import React from "react";
 
 const Navbar = () => {
   return (
-    <nav className='bg-white shadow-md'>
+    <nav className='bg-base-100 border-b border-base-200'>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-        <div className='flex justify-between h-16 items-center'>
+        <div className='flex justify-between h-20 items-center'>
           {/* Logo */}
           <div className='flex-shrink-0'>
-            <a href='/' className='text-2xl font-bold text-blue-600'>
+            <a href='/' className='text-3xl font-serif font-bold text-primary'>
               NodeNinjas
             </a>
           </div>
@@ -17,32 +17,29 @@ const Navbar = () => {
             <div className='ml-10 flex items-center space-x-8'>
               <a
                 href='/'
-                className='text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium'
+                className='text-base-content hover:text-primary px-3 py-2 text-sm font-medium transition-colors duration-200'
               >
                 Home
               </a>
               <a
                 href='/lost-items'
-                className='text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium'
+                className='text-base-content hover:text-primary px-3 py-2 text-sm font-medium transition-colors duration-200'
               >
                 Lost Items
               </a>
               <a
                 href='/found-items'
-                className='text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium'
+                className='text-base-content hover:text-primary px-3 py-2 text-sm font-medium transition-colors duration-200'
               >
                 Found Items
               </a>
               <a
                 href='/dashboard'
-                className='text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium'
+                className='text-base-content hover:text-primary px-3 py-2 text-sm font-medium transition-colors duration-200'
               >
                 Dashboard
               </a>
-              <a
-                href='/login'
-                className='bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium'
-              >
+              <a href='/login' className='btn btn-primary btn-sm'>
                 Login/Signup
               </a>
             </div>
@@ -52,13 +49,13 @@ const Navbar = () => {
           <div className='md:hidden'>
             <button
               type='button'
-              className='inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500'
+              className='btn btn-ghost btn-sm'
               aria-controls='mobile-menu'
               aria-expanded='false'
             >
               <span className='sr-only'>Open main menu</span>
               <svg
-                className='block h-6 w-6'
+                className='h-6 w-6'
                 xmlns='http://www.w3.org/2000/svg'
                 fill='none'
                 viewBox='0 0 24 24'
@@ -82,32 +79,29 @@ const Navbar = () => {
         <div className='px-2 pt-2 pb-3 space-y-1 sm:px-3'>
           <a
             href='/'
-            className='text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium'
+            className='text-base-content hover:text-primary block px-3 py-2 text-base font-medium transition-colors duration-200'
           >
             Home
           </a>
           <a
             href='/lost-items'
-            className='text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium'
+            className='text-base-content hover:text-primary block px-3 py-2 text-base font-medium transition-colors duration-200'
           >
             Lost Items
           </a>
           <a
             href='/found-items'
-            className='text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium'
+            className='text-base-content hover:text-primary block px-3 py-2 text-base font-medium transition-colors duration-200'
           >
             Found Items
           </a>
           <a
             href='/dashboard'
-            className='text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium'
+            className='text-base-content hover:text-primary block px-3 py-2 text-base font-medium transition-colors duration-200'
           >
             Dashboard
           </a>
-          <a
-            href='/login'
-            className='bg-blue-600 text-white hover:bg-blue-700 block px-3 py-2 rounded-md text-base font-medium'
-          >
+          <a href='/login' className='btn btn-primary btn-block'>
             Login/Signup
           </a>
         </div>
