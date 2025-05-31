@@ -26,6 +26,38 @@ function ManageItems() {
       location: 'Engineering Building',
       date: '2024-01-14',
       status: 'Pending'
+    },
+    {
+      type: 'FOUND',
+      item: 'MacBook Charger',
+      reporter: 'zainab.khan@umt.edu.pk',
+      location: 'Computer Lab',
+      date: '2024-01-16',
+      status: 'Active'
+    },
+    {
+      type: 'LOST',
+      item: 'Student ID Card',
+      reporter: 'usman.ahmed@umt.edu.pk',
+      location: 'Sports Complex',
+      date: '2024-01-16',
+      status: 'Claimed'
+    },
+    {
+      type: 'FOUND',
+      item: 'Calculator',
+      reporter: 'fatima.ibrahim@umt.edu.pk',
+      location: 'Mathematics Department',
+      date: '2024-01-17',
+      status: 'Pending'
+    },
+    {
+      type: 'LOST',
+      item: 'Airpods Pro',
+      reporter: 'ali.raza@umt.edu.pk',
+      location: 'Student Center',
+      date: '2024-01-17',
+      status: 'Active'
     }
   ];
 
