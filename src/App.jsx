@@ -38,7 +38,10 @@ const routes = [
   { path: "/found", element: <FoundItems /> },
   { path: "/lost", element: <LostItemsPage /> },
   { path: "/itemdetail/:id", element: <ItemDetail /> },
-  { path: "/claim/:id", element: <ItemClaimForm /> },
+
+  { path: "/lossitemform", element: <LossItemform /> },
+  { path: "/founditemform", element: <FoundItemform /> },
+
   { path: "*", element: <PageNotFound /> },
 ];
 

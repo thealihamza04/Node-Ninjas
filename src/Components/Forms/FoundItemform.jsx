@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FiUpload, FiCalendar, FiMapPin, FiTag, FiPhone, FiFileText, FiImage, FiAlertCircle } from 'react-icons/fi';
+import { FiUpload, FiCalendar, FiMapPin, FiTag, FiFileText, FiImage, FiAlertCircle } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import { _backendAPI } from '../../APIs/api';
 import axios from 'axios';
@@ -9,15 +9,13 @@ import { useNavigate } from 'react-router-dom';
 function FoundItemform() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    category: '',
-    contactInfo: '',
-    createdAt: new Date().toISOString().split('T')[0],
-    dateFound: '',
-    description: '',
-    imageUrl: '',
-    location: '',
     name: '',
-    type: 'Found'  // Changed to match API format
+    category: '',
+    dateLostFound: '',
+    description: '',
+    location: '',
+    imageUrl: '',
+    type: 'Found'
   });
 
   const [focusedField, setFocusedField] = useState(null);
@@ -38,14 +36,6 @@ function FoundItemform() {
     setError(null);
 
     try {
-      // Check if all required fields are filled
-      const requiredFields = ['name', 'category', 'dateFound', 'location', 'contactInfo', 'description'];
-      const missingFields = requiredFields.filter(field => !formData[field]);
-      
-      if (missingFields.length > 0) {
-        throw new Error(`Please fill in all required fields: ${missingFields.join(', ')}`);
-      }
-
       const token = localStorage.getItem('token');
       if (!token) {
         toast.error('Please login to report a found item');
@@ -53,32 +43,21 @@ function FoundItemform() {
         return;
       }
 
-      const response = await axios.post(`${_backendAPI}/item`, formData, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await axios.post(`${_backendAPI}/api/item`, formData);
 
       console.log('Item submitted successfully:', response.data);
-      
-      // Show success message
       toast.success('Found item reported successfully!');
       
-      // Reset form after successful submission
       setFormData({
-        category: '',
-        contactInfo: '',
-        createdAt: new Date().toISOString().split('T')[0],
-        dateFound: '',
-        description: '',
-        imageUrl: '',
-        location: '',
         name: '',
+        category: '',
+        dateLostFound: '',
+        description: '',
+        location: '',
+        imageUrl: '',
         type: 'Found'
       });
 
-      // Navigate to found items page
       navigate('/found');
       
     } catch (err) {
@@ -205,7 +184,7 @@ function FoundItemform() {
               <motion.div 
                 className="form-control"
                 variants={fieldVariants}
-                animate={focusedField === 'dateFound' ? 'focused' : 'unfocused'}
+                animate={focusedField === 'dateLostFound' ? 'focused' : 'unfocused'}
               >
                 <label className="label">
                   <span className="label-text font-medium text-[#0B3B5B]">Date Found</span>
@@ -213,10 +192,10 @@ function FoundItemform() {
                 <div className="relative group">
                   <input
                     type="date"
-                    name="dateFound"
-                    value={formData.dateFound}
+                    name="dateLostFound"
+                    value={formData.dateLostFound}
                     onChange={handleChange}
-                    onFocus={() => setFocusedField('dateFound')}
+                    onFocus={() => setFocusedField('dateLostFound')}
                     onBlur={() => setFocusedField(null)}
                     className="input input-bordered w-full pl-10 transition-all duration-300 hover:border-[#2E7AB8] focus:border-[#2E7AB8] focus:ring-2 focus:ring-[#2E7AB8]/20"
                     required
@@ -226,58 +205,30 @@ function FoundItemform() {
               </motion.div>
             </div>
 
-            {/* Location and Contact Fields Row */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Location Field */}
-              <motion.div 
-                className="form-control"
-                variants={fieldVariants}
-                animate={focusedField === 'location' ? 'focused' : 'unfocused'}
-              >
-                <label className="label">
-                  <span className="label-text font-medium text-[#0B3B5B]">Location Found</span>
-                </label>
-                <div className="relative group">
-                  <input
-                    type="text"
-                    name="location"
-                    value={formData.location}
-                    onChange={handleChange}
-                    onFocus={() => setFocusedField('location')}
-                    onBlur={() => setFocusedField(null)}
-                    placeholder="Enter location where item was found"
-                    className="input input-bordered w-full pl-10 transition-all duration-300 hover:border-[#2E7AB8] focus:border-[#2E7AB8] focus:ring-2 focus:ring-[#2E7AB8]/20"
-                    required
-                  />
-                  <FiMapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2E7AB8] group-hover:text-[#0B3B5B] transition-colors duration-300" />
-                </div>
-              </motion.div>
-
-              {/* Contact Info Field */}
-              <motion.div 
-                className="form-control"
-                variants={fieldVariants}
-                animate={focusedField === 'contactInfo' ? 'focused' : 'unfocused'}
-              >
-                <label className="label">
-                  <span className="label-text font-medium text-[#0B3B5B]">Contact Information</span>
-                </label>
-                <div className="relative group">
-                  <input
-                    type="text"
-                    name="contactInfo"
-                    value={formData.contactInfo}
-                    onChange={handleChange}
-                    onFocus={() => setFocusedField('contactInfo')}
-                    onBlur={() => setFocusedField(null)}
-                    placeholder="Enter your contact information"
-                    className="input input-bordered w-full pl-10 transition-all duration-300 hover:border-[#2E7AB8] focus:border-[#2E7AB8] focus:ring-2 focus:ring-[#2E7AB8]/20"
-                    required
-                  />
-                  <FiPhone className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2E7AB8] group-hover:text-[#0B3B5B] transition-colors duration-300" />
-                </div>
-              </motion.div>
-            </div>
+            {/* Location Field */}
+            <motion.div 
+              className="form-control"
+              variants={fieldVariants}
+              animate={focusedField === 'location' ? 'focused' : 'unfocused'}
+            >
+              <label className="label">
+                <span className="label-text font-medium text-[#0B3B5B]">Location Found</span>
+              </label>
+              <div className="relative group">
+                <input
+                  type="text"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleChange}
+                  onFocus={() => setFocusedField('location')}
+                  onBlur={() => setFocusedField(null)}
+                  placeholder="Enter location where item was found"
+                  className="input input-bordered w-full pl-10 transition-all duration-300 hover:border-[#2E7AB8] focus:border-[#2E7AB8] focus:ring-2 focus:ring-[#2E7AB8]/20"
+                  required
+                />
+                <FiMapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2E7AB8] group-hover:text-[#0B3B5B] transition-colors duration-300" />
+              </div>
+            </motion.div>
 
             {/* Description Field */}
             <motion.div 
