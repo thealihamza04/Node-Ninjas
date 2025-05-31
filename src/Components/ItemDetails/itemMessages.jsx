@@ -2,15 +2,16 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { FaPaperPlane } from "react-icons/fa";
-import { _backendAPI } from "../../APIs/api";
 import { io } from "socket.io-client";
+import { _backendAPI } from "../../APIs/api";
 
 const NeedMessages = ({ itemID, itemCreator, currentUserEmail }) => {
   const [allMessages, setAllMessages] = useState([]);
   const [userEmails, setUserEmails] = useState([]);
-  const [selectedUserEmail, setSelectedUserEmail] = useState(itemCreator);
+  const [selectedUserEmail, setSelectedUserEmail] = useState(null);
   const [newMessage, setNewMessage] = useState("");
   const [error, setError] = useState(null);
+  const [isConnected, setIsConnected] = useState(false);
   const messagesEndRef = useRef(null);
   const socketRef = useRef(null);
 
@@ -20,20 +21,42 @@ const NeedMessages = ({ itemID, itemCreator, currentUserEmail }) => {
       reconnection: true,
       reconnectionAttempts: Infinity,
       reconnectionDelay: 1000,
+      transports: ["websocket"],
+      autoConnect: true,
+      auth: {
+        email: currentUserEmail,
+      },
     });
 
-    return () => {
-      if (socketRef.current) {
-        socketRef.current.disconnect();
+    // Connection status handlers
+    const onConnect = () => {
+      setIsConnected(true);
+      console.log("Socket connected");
+    };
+
+    const onDisconnect = () => {
+      setIsConnected(false);
+      console.log("Socket disconnected");
+    };
+
+    const onAuthentication = ({ success, error }) => {
+      if (success) {
+        console.log("Socket authentication successful");
+      } else {
+        console.error("Socket authentication failed:", error);
       }
     };
-  }, []);
 
-  // Authenticate socket when currentUserEmail changes
-  useEffect(() => {
-    if (socketRef.current && currentUserEmail) {
-      socketRef.current.emit("authenticate", currentUserEmail);
-    }
+    socketRef.current.on("connect", onConnect);
+    socketRef.current.on("disconnect", onDisconnect);
+    socketRef.current.on("authentication", onAuthentication);
+
+    return () => {
+      socketRef.current.off("connect", onConnect);
+      socketRef.current.off("disconnect", onDisconnect);
+      socketRef.current.off("authentication", onAuthentication);
+      socketRef.current.disconnect();
+    };
   }, [currentUserEmail]);
 
   // Fetch initial messages and setup socket listeners
@@ -41,7 +64,7 @@ const NeedMessages = ({ itemID, itemCreator, currentUserEmail }) => {
     const fetchMessages = async () => {
       try {
         const response = await axios.get(
-          `${_backendAPI}/api/messages/${itemID}`
+          ${_backendAPI}/api/messages/${itemID}
         );
         setAllMessages(response.data);
         updateUserEmailList(response.data);
@@ -55,9 +78,17 @@ const NeedMessages = ({ itemID, itemCreator, currentUserEmail }) => {
 
     if (socketRef.current) {
       const handleReceiveMessage = (message) => {
-        console.log("message", message);
         if (message.itemID === itemID) {
           setAllMessages((prev) => [...prev, message]);
+
+          // If this is the active conversation, mark as read
+          if (message.sender === selectedUserEmail) {
+            socketRef.current.emit("markMessagesAsRead", {
+              itemID,
+              currentUser: currentUserEmail,
+              otherUser: selectedUserEmail,
+            });
+          }
 
           // Update unread count if message is for current user
           if (message.receiver === currentUserEmail) {
@@ -66,13 +97,29 @@ const NeedMessages = ({ itemID, itemCreator, currentUserEmail }) => {
         }
       };
 
+      const handleMessagesRead = ({ itemID, reader }) => {
+        if (itemID === itemID && reader === selectedUserEmail) {
+          setAllMessages((prev) =>
+            prev.map((msg) =>
+              msg.sender === reader &&
+              msg.receiver === currentUserEmail &&
+              !msg.read
+                ? { ...msg, read: true }
+                : msg
+            )
+          );
+        }
+      };
+
       socketRef.current.on("receiveMessage", handleReceiveMessage);
+      socketRef.current.on("messagesRead", handleMessagesRead);
 
       return () => {
         socketRef.current.off("receiveMessage", handleReceiveMessage);
+        socketRef.current.off("messagesRead", handleMessagesRead);
       };
     }
-  }, [itemID, currentUserEmail]);
+  }, [itemID, currentUserEmail, selectedUserEmail]);
 
   // Helper function to update user email list with unread counts
   const updateUserEmailList = (messages) => {
@@ -154,10 +201,20 @@ const NeedMessages = ({ itemID, itemCreator, currentUserEmail }) => {
         read: false,
       };
 
-      socketRef.current.emit("sendMessage", messageData);
-      console.log("message", messageData);
+      // Optimistic UI update
       setAllMessages((prev) => [...prev, messageData]);
       setNewMessage("");
+
+      // Emit via socket with acknowledgment
+      socketRef.current.emit("sendMessage", messageData, (ack) => {
+        if (ack?.error) {
+          console.error("Failed to send message:", ack.error);
+          // Revert optimistic update if needed
+          setAllMessages((prev) =>
+            prev.filter((msg) => msg.timestamp !== messageData.timestamp)
+          );
+        }
+      });
     }
   };
 
@@ -169,15 +226,20 @@ const NeedMessages = ({ itemID, itemCreator, currentUserEmail }) => {
   );
 
   return (
-    <div className="mx-auto md:p-6 ">
+    <div className="mx-auto md:p-6">
       {error && <p className="text-red-500">Error: {error.message}</p>}
+      {!isConnected && (
+        <div className="text-yellow-600 mb-2">
+          Connection lost. Attempting to reconnect...
+        </div>
+      )}
 
       {currentUserEmail === itemCreator ? (
         <div className="mt-4">
           <h3 className="text-lg font-semibold">
             Users Who Messaged This Need
           </h3>
-          <div className="flex flex-row gap-2">
+          <div className="flex flex-row gap-2 flex-wrap">
             {userEmails.map(([email, unreadCount]) => (
               <button
                 key={email}
@@ -188,7 +250,7 @@ const NeedMessages = ({ itemID, itemCreator, currentUserEmail }) => {
                 }`}
                 onClick={() => handleSelectUser(email)}
               >
-                {email}
+                <span className="truncate max-w-[120px]">{email}</span>
                 {unreadCount > 0 && (
                   <div className="px-2 text-xs rounded-full bg-red-400 text-white">
                     {unreadCount}
@@ -280,10 +342,12 @@ const NeedMessages = ({ itemID, itemCreator, currentUserEmail }) => {
                 e.key === "Enter" && !e.shiftKey && handleSendMessage()
               }
               placeholder="Type a message..."
+              disabled={!isConnected}
             />
             <button
-              className="btn btn-sm md:btn-md btn-primary "
+              className="btn btn-sm md:btn-md btn-primary"
               onClick={handleSendMessage}
+              disabled={!isConnected || !newMessage.trim()}
             >
               <FaPaperPlane className="mr-2" /> Send
             </button>
