@@ -14,6 +14,7 @@ import Register from "./Components/Authentication/Register";
 import FoundItems from "./Components/FoundItems/FoundItems";
 import LostItemsPage from "./Components/LostItems/LostItemsPage";
 import ItemDetail from "./Components/ItemDetails/ItemDetail";
+import ItemClaimForm from "./Components/Forms/ItemClaimForm";
 
 import UserDashboard from "./Components/User/UserDashboard";
 
@@ -29,7 +30,7 @@ import FoundItemform from "./Components/Forms/FoundItemform";
 
 // Route Configuration
 const routes = [
-  { path: "/", element: <LossItemform /> },
+  { path: "/", element: <HomePage /> },
   { path: "/user", element: <UserDashboard /> },
   { path: "/admin", element: <AdminDashboard /> },
   { path: "/login", element: <Login /> },
@@ -37,6 +38,7 @@ const routes = [
   { path: "/found", element: <FoundItems /> },
   { path: "/lost", element: <LostItemsPage /> },
   { path: "/itemdetail/:id", element: <ItemDetail /> },
+  { path: "/claim/:id", element: <ItemClaimForm /> },
   { path: "*", element: <PageNotFound /> },
 ];
 

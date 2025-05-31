@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaUser, FaSignOutAlt } from "react-icons/fa";
+import { toast } from "react-hot-toast";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(
+    localStorage.getItem("token") ? true : false
+  );
 
   useEffect(() => {
     const handleScroll = () => {
@@ -15,6 +20,22 @@ const Navbar = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleLogout = () => {
+    // Clear all auth-related data from localStorage
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("userEmail");
+
+    // Update state
+    setIsUserLoggedIn(false);
+
+    // Show success message
+    toast.success("Logged out successfully");
+
+    // Redirect to home page
+    navigate("/");
+  };
 
   const navLinks = [
     { path: "/lost", label: "Lost Items" },
@@ -148,13 +169,23 @@ const Navbar = () => {
                   damping: 10,
                 }}
               >
-                <Link
-                  to='/login'
-                  className='btn btn-primary btn-sm gap-2 hover:shadow-lg transition-all duration-200'
-                >
-                  <FaUser className='w-4 h-4' />
-                  Login/Signup
-                </Link>
+                {isUserLoggedIn ? (
+                  <button
+                    onClick={handleLogout}
+                    className='btn btn-error btn-sm gap-2 hover:shadow-lg transition-all duration-200'
+                  >
+                    <FaSignOutAlt className='w-4 h-4' />
+                    Logout
+                  </button>
+                ) : (
+                  <Link
+                    to='/login'
+                    className='btn btn-primary btn-sm gap-2 hover:shadow-lg transition-all duration-200'
+                  >
+                    <FaUser className='w-4 h-4' />
+                    Login/Signup
+                  </Link>
+                )}
               </motion.div>
             </div>
           </div>
@@ -246,14 +277,27 @@ const Navbar = () => {
                 }}
                 className='px-3 py-2'
               >
-                <Link
-                  to='/login'
-                  className='btn btn-primary btn-block gap-2'
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <FaUser className='w-4 h-4' />
-                  Login/Signup
-                </Link>
+                {isUserLoggedIn ? (
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className='btn btn-error btn-block gap-2'
+                  >
+                    <FaSignOutAlt className='w-4 h-4' />
+                    Logout
+                  </button>
+                ) : (
+                  <Link
+                    to='/login'
+                    className='btn btn-primary btn-block gap-2'
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <FaUser className='w-4 h-4' />
+                    Login/Signup
+                  </Link>
+                )}
               </motion.div>
             </div>
           </motion.div>
