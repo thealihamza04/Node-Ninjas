@@ -38,7 +38,7 @@ function Tiles() {
       {stats.map((stat, index) => (
         <div
           key={index}
-          className={`${stat.color} p-6 rounded-lg shadow-sm transition-all hover:shadow-md`}
+          className={`${stat.color} p-6 rounded-lg transition-all`}
         >
           <div className="flex items-center justify-between">
             <div>
@@ -47,7 +47,7 @@ function Tiles() {
                 {stat.value}
               </h3>
             </div>
-            <div className="p-3 rounded-full bg-white shadow-sm">
+            <div className="p-3 rounded-full bg-transparent">
               {stat.icon}
             </div>
           </div>

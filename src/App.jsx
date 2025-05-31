@@ -14,7 +14,11 @@ import Register from "./Components/Authentication/Register";
 import FoundItems from "./Components/FoundItems/FoundItems";
 import LostItemsPage from "./Components/LostItems/LostItemsPage";
 import ItemDetail from "./Components/ItemDetails/ItemDetail";
+
+import UserDashboard from "./Components/User/UserDashboard";
+
 import PageNotFound from "./Components/404/PageNotFound";
+
 
 // Context Provider
 import ItemsState from "./context/items/ItemsState";
@@ -39,6 +43,7 @@ const Layout = ({ children }) => {
   return (
     <div className='min-h-screen bg-gray-50'>
       <Navbar />
+
       {children}
       <Footer />
     </div>
@@ -61,6 +66,7 @@ const App = () => {
         </BrowserRouter>
       </ItemsState>
     </ErrorBoundary>
+
   );
 };
 
