@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { _backendAPI } from "../../APIs/api";
+import toast from "react-hot-toast";
 import {
   FaUser,
   FaEnvelope,
@@ -7,13 +9,15 @@ import {
   FaEyeSlash,
   FaIdCard,
 } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
-    studentId: "",
+    phoneNumber: "",
     password: "",
     confirmPassword: "",
   });
@@ -26,7 +30,7 @@ const Register = () => {
   const validateForm = () => {
     const newErrors = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const studentIdRegex = /^[A-Za-z0-9]{8,}$/;
+    const phoneNumberRegex = /^[A-Za-z0-9]{8,}$/;
 
     // Full Name Validation
     if (!formData.fullName.trim()) {
@@ -43,10 +47,10 @@ const Register = () => {
     }
 
     // Student ID Validation
-    if (!formData.studentId) {
-      newErrors.studentId = "Student ID is required";
-    } else if (!studentIdRegex.test(formData.studentId)) {
-      newErrors.studentId = "Please enter a valid student ID";
+    if (!formData.phoneNumber) {
+      newErrors.phoneNumber = "Student ID is required";
+    } else if (!phoneNumberRegex.test(formData.phoneNumber)) {
+      newErrors.phoneNumber = "Please enter a valid student ID";
     }
 
     // Password Validation
@@ -81,14 +85,28 @@ const Register = () => {
 
     setIsLoading(true);
     try {
-      // TODO: Implement actual registration logic here
-      console.log("Registration attempt with:", formData);
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    } catch (error) {
-      setErrors({
-        submit: "Registration failed. Please try again.",
+      const response = await axios.post(_backendAPI + "/auth/register", {
+        username: formData.fullName,
+        email: formData.email,
+        phoneNumber: formData.phoneNumber,
+        password: formData.password,
       });
+
+      if (response.data.success) {
+        localStorage.setItem("token", response.data.token);
+        toast.success("Registration successful! You are now logged in.");
+        navigate("/");
+      }
+    } catch (error) {
+      const errorMessage =
+        error?.response?.data?.message ||
+        error.message ||
+        "Registration failed. Please try again.";
+
+      setErrors({
+        submit: errorMessage,
+      });
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -110,41 +128,41 @@ const Register = () => {
   };
 
   return (
-    <div className='min-h-screen flex items-center justify-center bg-base-200 px-4 py-8'>
-      <div className='card w-full max-w-md bg-base-100 shadow-xl'>
-        <div className='card-body p-6 md:p-8'>
-          <h2 className='text-2xl font-bold text-center mb-6'>
+    <div className="min-h-screen flex items-center justify-center bg-base-200 px-4 py-8">
+      <div className="card w-full max-w-md bg-base-100 shadow-xl">
+        <div className="card-body p-6 md:p-8">
+          <h2 className="text-2xl font-bold text-center mb-6">
             Create Account
           </h2>
 
           {errors.submit && (
-            <div className='alert alert-error mb-4'>
+            <div className="alert alert-error mb-4">
               <span>{errors.submit}</span>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className='space-y-4'>
+          <form onSubmit={handleSubmit} className="space-y-4">
             {/* Full Name Field */}
-            <div className='form-control'>
-              <label className='label'>
-                <span className='label-text'>Full Name</span>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Full Name</span>
               </label>
-              <div className='relative'>
+              <div className="relative">
                 <input
-                  type='text'
-                  name='fullName'
+                  type="text"
+                  name="fullName"
                   value={formData.fullName}
                   onChange={handleChange}
-                  placeholder='Enter your full name'
+                  placeholder="Enter your full name"
                   className={`input input-bordered w-full pl-10 ${
                     errors.fullName ? "input-error" : ""
                   }`}
                 />
-                <FaUser className='absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50' />
+                <FaUser className="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50" />
               </div>
               {errors.fullName && (
-                <label className='label'>
-                  <span className='label-text-alt text-error'>
+                <label className="label">
+                  <span className="label-text-alt text-error">
                     {errors.fullName}
                   </span>
                 </label>
@@ -152,26 +170,26 @@ const Register = () => {
             </div>
 
             {/* Email Field */}
-            <div className='form-control'>
-              <label className='label'>
-                <span className='label-text'>Email</span>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Email</span>
               </label>
-              <div className='relative'>
+              <div className="relative">
                 <input
-                  type='email'
-                  name='email'
+                  type="email"
+                  name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder='Enter your email'
+                  placeholder="Enter your email"
                   className={`input input-bordered w-full pl-10 ${
                     errors.email ? "input-error" : ""
                   }`}
                 />
-                <FaEnvelope className='absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50' />
+                <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50" />
               </div>
               {errors.email && (
-                <label className='label'>
-                  <span className='label-text-alt text-error'>
+                <label className="label">
+                  <span className="label-text-alt text-error">
                     {errors.email}
                   </span>
                 </label>
@@ -179,60 +197,61 @@ const Register = () => {
             </div>
 
             {/* Student ID Field */}
-            <div className='form-control'>
-              <label className='label'>
-                <span className='label-text'>Student ID</span>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Phone Number</span>
               </label>
-              <div className='relative'>
+              <div className="relative">
                 <input
-                  type='text'
-                  name='studentId'
-                  value={formData.studentId}
+                  type="text"
+                  name="phoneNumber"
+                  value={formData.phoneNumber}
                   onChange={handleChange}
-                  placeholder='Enter your student ID'
+                  placeholder="Enter your Phone Number"
+                  required
                   className={`input input-bordered w-full pl-10 ${
-                    errors.studentId ? "input-error" : ""
+                    errors.phoneNumber ? "input-error" : ""
                   }`}
                 />
-                <FaIdCard className='absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50' />
+                <FaIdCard className="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50" />
               </div>
-              {errors.studentId && (
-                <label className='label'>
-                  <span className='label-text-alt text-error'>
-                    {errors.studentId}
+              {errors.phoneNumber && (
+                <label className="label">
+                  <span className="label-text-alt text-error">
+                    {errors.phoneNumber}
                   </span>
                 </label>
               )}
             </div>
 
             {/* Password Field */}
-            <div className='form-control'>
-              <label className='label'>
-                <span className='label-text'>Password</span>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Password</span>
               </label>
-              <div className='relative'>
+              <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
-                  name='password'
+                  name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder='Create a password'
+                  placeholder="Create a password"
                   className={`input input-bordered w-full pl-10 ${
                     errors.password ? "input-error" : ""
                   }`}
                 />
-                <FaLock className='absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50' />
+                <FaLock className="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50" />
                 <button
-                  type='button'
+                  type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className='absolute right-3 top-1/2 -translate-y-1/2 text-base-content/50 hover:text-base-content'
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/50 hover:text-base-content"
                 >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
               {errors.password && (
-                <label className='label'>
-                  <span className='label-text-alt text-error'>
+                <label className="label">
+                  <span className="label-text-alt text-error">
                     {errors.password}
                   </span>
                 </label>
@@ -240,33 +259,33 @@ const Register = () => {
             </div>
 
             {/* Confirm Password Field */}
-            <div className='form-control'>
-              <label className='label'>
-                <span className='label-text'>Confirm Password</span>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Confirm Password</span>
               </label>
-              <div className='relative'>
+              <div className="relative">
                 <input
                   type={showConfirmPassword ? "text" : "password"}
-                  name='confirmPassword'
+                  name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  placeholder='Confirm your password'
+                  placeholder="Confirm your password"
                   className={`input input-bordered w-full pl-10 ${
                     errors.confirmPassword ? "input-error" : ""
                   }`}
                 />
-                <FaLock className='absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50' />
+                <FaLock className="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50" />
                 <button
-                  type='button'
+                  type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className='absolute right-3 top-1/2 -translate-y-1/2 text-base-content/50 hover:text-base-content'
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/50 hover:text-base-content"
                 >
                   {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
               {errors.confirmPassword && (
-                <label className='label'>
-                  <span className='label-text-alt text-error'>
+                <label className="label">
+                  <span className="label-text-alt text-error">
                     {errors.confirmPassword}
                   </span>
                 </label>
@@ -274,16 +293,16 @@ const Register = () => {
             </div>
 
             {/* Terms and Conditions */}
-            <div className='form-control'>
-              <label className='label cursor-pointer'>
+            <div className="form-control">
+              <label className="label cursor-pointer">
                 <input
-                  type='checkbox'
-                  className='checkbox checkbox-sm mr-2'
+                  type="checkbox"
+                  className="checkbox checkbox-sm mr-2"
                   required
                 />
-                <span className='label-text'>
+                <span className="label-text">
                   I agree to the{" "}
-                  <Link to='/terms' className='text-primary hover:underline'>
+                  <Link to="/terms" className="text-primary hover:underline">
                     Terms and Conditions
                   </Link>
                 </span>
@@ -292,7 +311,7 @@ const Register = () => {
 
             {/* Submit Button */}
             <button
-              type='submit'
+              type="submit"
               className={`btn btn-primary w-full ${isLoading ? "loading" : ""}`}
               disabled={isLoading}
             >
@@ -301,11 +320,11 @@ const Register = () => {
           </form>
 
           {/* Login Link */}
-          <div className='text-center mt-6'>
-            <span className='text-base-content/70'>
+          <div className="text-center mt-6">
+            <span className="text-base-content/70">
               Already have an account?{" "}
             </span>
-            <Link to='/login' className='text-primary hover:underline'>
+            <Link to="/login" className="text-primary hover:underline">
               Sign in
             </Link>
           </div>

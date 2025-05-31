@@ -1,5 +1,7 @@
 
-const _backendAPI = "http://node-ninjas-backend-production.up.railway.app";
+const _backendAPI = "https://node-ninjas-backend-production.up.railway.app";
+// const _backendAPI = "http://localhost:5000";
+
 
 
 
