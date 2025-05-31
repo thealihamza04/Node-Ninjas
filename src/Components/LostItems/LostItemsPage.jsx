@@ -2,14 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ItemCard from "../Home/Components/ItemCard";
 import SearchFilterBar from "../Home/Components/SearchFilterBar";
+import { useContext } from "react";
+import ItemsContext from "../../context/items/ItemsContext";
 
 const LostItemsPage = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [selectedLocation, setSelectedLocation] = useState("All");
   const [sortBy, setSortBy] = useState("newest");
+  const { lostItems, filters, updateFilter, filterItems } =
+    useContext(ItemsContext);
 
-  // Scroll to top on mount
   useEffect(() => {
     window.scrollTo({
       top: 0,
@@ -17,103 +17,17 @@ const LostItemsPage = () => {
     });
   }, []);
 
-  // Sample data - replace with actual data from your backend
-  const lostItems = [
-    {
-      id: 1,
-      title: "iPhone 13 Pro",
-      description:
-        "Lost my iPhone 13 Pro in the cafeteria. It has a blue case with a university logo sticker. Last seen near the coffee machine.",
-      category: "Electronics",
-      location: "Cafeteria",
-      date: "2024-03-15",
-      image:
-        "https://images.unsplash.com/photo-1591337676887-a217a6970a8a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=880&q=80",
-    },
-    {
-      id: 2,
-      title: "Calculus Textbook",
-      description:
-        "Lost my Calculus textbook (3rd Edition) in the library. It has my name written on the first page and some notes in the margins.",
-      category: "Books",
-      location: "Library",
-      date: "2024-03-14",
-      image:
-        "https://images.unsplash.com/photo-1589998059171-988d887df646?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1176&q=80",
-    },
-    {
-      id: 3,
-      title: "Wireless Earbuds",
-      description:
-        "Lost my white Samsung Galaxy Buds in the sports complex. They were in a small black case.",
-      category: "Electronics",
-      location: "Sports Complex",
-      date: "2024-03-13",
-      image:
-        "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1332&q=80",
-    },
-    {
-      id: 4,
-      title: "Student ID Card",
-      description:
-        "Lost my student ID card somewhere between the academic block and library. Name: John Smith, ID: 2024CS123",
-      category: "Documents",
-      location: "Academic Block",
-      date: "2024-03-12",
-      image:
-        "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
-    },
-    {
-      id: 5,
-      title: "Black Backpack",
-      description:
-        "Lost my black Nike backpack in the hostel common room. It has my laptop charger and some notebooks inside.",
-      category: "Accessories",
-      location: "Hostel",
-      date: "2024-03-11",
-      image:
-        "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
-    },
-  ];
-
-  const categories = [
-    "All",
-    "Electronics",
-    "Documents",
-    "Accessories",
-    "Others",
-  ];
-  const locations = [
-    "All",
-    "Library",
-    "Academic Block",
-    "Cafeteria",
-    "Sports Complex",
-  ];
-
-  const filteredItems = lostItems.filter((item) => {
-    const matchesSearch =
-      searchQuery === "" ||
-      item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory =
-      selectedCategory === "All" || item.category === selectedCategory;
-    const matchesLocation =
-      selectedLocation === "All" || item.location === selectedLocation;
-    return matchesSearch && matchesCategory && matchesLocation;
-  });
-
+  const filteredItems = filterItems(lostItems);
   const sortedItems = [...filteredItems].sort((a, b) => {
     if (sortBy === "newest") {
-      return new Date(b.date) - new Date(a.date);
+      return new Date(b.createdAt) - new Date(a.createdAt);
     }
-    return new Date(a.date) - new Date(b.date);
+    return new Date(a.createdAt) - new Date(b.createdAt);
   });
 
   return (
     <div className='min-h-screen pt-24 bg-base-200 py-8'>
       <div className='max-w-7xl mx-auto px-4'>
-        {/* Introduction Section */}
         <div className='bg-base-100 rounded-lg p-6 mb-8 shadow-sm'>
           <div className='flex items-start gap-4'>
             <div className='bg-primary/10 p-3 rounded-full'>
@@ -161,10 +75,8 @@ const LostItemsPage = () => {
           <h1 className='text-3xl font-bold'>Lost Items</h1>
         </div>
 
-        {/* Search and Filter Section */}
         <SearchFilterBar />
 
-        {/* Results Count with Visual Feedback */}
         <div className='mb-6 flex items-center gap-2'>
           <div className='w-2 h-2 rounded-full bg-primary'></div>
           <p className='text-base-content/70'>
@@ -172,14 +84,12 @@ const LostItemsPage = () => {
           </p>
         </div>
 
-        {/* Items Grid */}
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
           {sortedItems.map((item) => (
-            <ItemCard key={item.id} item={item} type='lost' />
+            <ItemCard key={item._id} item={item} type='lost' />
           ))}
         </div>
 
-        {/* No Results Message with Action */}
         {sortedItems.length === 0 && (
           <div className='text-center py-12 bg-base-100 rounded-lg shadow-sm'>
             <div className='mb-4'>
@@ -207,7 +117,6 @@ const LostItemsPage = () => {
           </div>
         )}
 
-        {/* Report Lost Item Button with Tooltip */}
         <div className='fixed bottom-8 right-8 group'>
           <Link
             to='/report-lost-item'

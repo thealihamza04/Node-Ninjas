@@ -45,7 +45,7 @@ const ItemCard = ({ item, type, className = "" }) => {
             className='w-full h-52 object-cover rounded-xl'
             onError={(e) => {
               e.target.onerror = null; // Prevent infinite loop
-              e.target.src = "/public/baloon.png";
+              e.target.src = "/public/loadingImg.jpg";
             }}
           />
         </div>
