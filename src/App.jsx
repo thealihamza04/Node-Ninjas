@@ -29,7 +29,7 @@ import FoundItemform from "./Components/Forms/FoundItemform";
 
 // Route Configuration
 const routes = [
-  { path: "/", element: <LossItemform /> },
+  { path: "/", element: <HomePage /> },
   { path: "/user", element: <UserDashboard /> },
   { path: "/admin", element: <AdminDashboard /> },
   { path: "/login", element: <Login /> },
@@ -37,6 +37,8 @@ const routes = [
   { path: "/found", element: <FoundItems /> },
   { path: "/lost", element: <LostItemsPage /> },
   { path: "/itemdetail/:id", element: <ItemDetail /> },
+  { path: "/lossitemform", element: <LossItemform /> },
+  { path: "/founditemform", element: <FoundItemform /> },
   { path: "*", element: <PageNotFound /> },
 ];
 

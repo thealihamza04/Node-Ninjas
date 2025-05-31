@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import MyRequest from "./MyRequest";
 import MyPost from "./MyPost";
 import { FiPlus } from "react-icons/fi";
+import { Link } from "react-router-dom";
 
 function Dashboard() {
   const [activeTab, setActiveTab] = useState("posts");
@@ -10,14 +11,14 @@ function Dashboard() {
     <div className='space-y-6'>
       {/* Action Buttons */}
       <div className='flex flex-wrap gap-4'>
-        <button className='btn btn-primary gap-2'>
+        <Link to="/lossitemform" className='btn btn-primary gap-2'>
           <FiPlus className='w-4 h-4' />
           Report Lost Item
-        </button>
-        <button className='btn btn-primary gap-2'>
+        </Link>
+        <Link to="/founditemform" className='btn btn-primary gap-2'>
           <FiPlus className='w-4 h-4' />
           Report Found Item
-        </button>
+        </Link>
       </div>
 
       {/* Tab Navigation */}
