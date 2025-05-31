@@ -8,7 +8,7 @@ import { io } from "socket.io-client";
 const NeedMessages = ({ itemID, itemCreator, currentUserEmail }) => {
   const [allMessages, setAllMessages] = useState([]);
   const [userEmails, setUserEmails] = useState([]);
-  const [selectedUserEmail, setSelectedUserEmail] = useState(null);
+  const [selectedUserEmail, setSelectedUserEmail] = useState(itemCreator);
   const [newMessage, setNewMessage] = useState("");
   const [error, setError] = useState(null);
   const messagesEndRef = useRef(null);
@@ -55,6 +55,7 @@ const NeedMessages = ({ itemID, itemCreator, currentUserEmail }) => {
 
     if (socketRef.current) {
       const handleReceiveMessage = (message) => {
+        console.log("message", message);
         if (message.itemID === itemID) {
           setAllMessages((prev) => [...prev, message]);
 
@@ -154,6 +155,7 @@ const NeedMessages = ({ itemID, itemCreator, currentUserEmail }) => {
       };
 
       socketRef.current.emit("sendMessage", messageData);
+      console.log("message", messageData);
       setAllMessages((prev) => [...prev, messageData]);
       setNewMessage("");
     }
@@ -167,15 +169,15 @@ const NeedMessages = ({ itemID, itemCreator, currentUserEmail }) => {
   );
 
   return (
-    <div className='mx-auto md:p-6 '>
-      {error && <p className='text-red-500'>Error: {error.message}</p>}
+    <div className="mx-auto md:p-6 ">
+      {error && <p className="text-red-500">Error: {error.message}</p>}
 
       {currentUserEmail === itemCreator ? (
-        <div className='mt-4'>
-          <h3 className='text-lg font-semibold'>
+        <div className="mt-4">
+          <h3 className="text-lg font-semibold">
             Users Who Messaged This Need
           </h3>
-          <div className='flex flex-row gap-2'>
+          <div className="flex flex-row gap-2">
             {userEmails.map(([email, unreadCount]) => (
               <button
                 key={email}
@@ -188,7 +190,7 @@ const NeedMessages = ({ itemID, itemCreator, currentUserEmail }) => {
               >
                 {email}
                 {unreadCount > 0 && (
-                  <div className='px-2 text-xs rounded-full bg-red-400 text-white'>
+                  <div className="px-2 text-xs rounded-full bg-red-400 text-white">
                     {unreadCount}
                   </div>
                 )}
@@ -197,7 +199,7 @@ const NeedMessages = ({ itemID, itemCreator, currentUserEmail }) => {
           </div>
         </div>
       ) : (
-        <div className='mt-4'>
+        <div className="mt-4">
           <button
             className={`btn ${
               selectedUserEmail === itemCreator ? "btn-primary" : "btn-outline"
@@ -210,11 +212,11 @@ const NeedMessages = ({ itemID, itemCreator, currentUserEmail }) => {
       )}
 
       {selectedUserEmail && (
-        <div className=''>
-          <h3 className='text-lg font-semibold'>
+        <div className="">
+          <h3 className="text-lg font-semibold">
             Chat with {selectedUserEmail}
           </h3>
-          <div className='bg-gray-100 border border-black/15 p-4 rounded-md h-92 overflow-y-auto'>
+          <div className="bg-gray-100 border border-black/15 p-4 rounded-md h-92 overflow-y-auto">
             {filteredMessages.map((msg, index) => (
               <div
                 key={index}
@@ -223,20 +225,20 @@ const NeedMessages = ({ itemID, itemCreator, currentUserEmail }) => {
                 } pt-4`}
               >
                 <Link
-                  to='/home/profile'
+                  to="/home/profile"
                   state={{ email: msg.sender }}
-                  className='chat-image avatar tooltip'
+                  className="chat-image avatar tooltip"
                   data-tip={
                     msg.sender === currentUserEmail ? "You" : msg.sender
                   }
                 >
-                  <div className='w-10 rounded-full'>
-                    <img alt='User Avatar' src='/profilePic.jpg' />
+                  <div className="w-10 rounded-full">
+                    <img alt="User Avatar" src="/profilePic.jpg" />
                   </div>
                 </Link>
-                <div className='chat-header text-xs'>
+                <div className="chat-header text-xs">
                   {msg.sender === currentUserEmail ? "You" : msg.sender}
-                  <span className='text-xs opacity-50'>
+                  <span className="text-xs opacity-50">
                     {" "}
                     {msg.timestamp
                       ? new Date(msg.timestamp).toLocaleTimeString([], {
@@ -257,7 +259,7 @@ const NeedMessages = ({ itemID, itemCreator, currentUserEmail }) => {
                 >
                   {msg.content || "No message content"}
                 </div>
-                <div className='chat-footer opacity-50'>
+                <div className="chat-footer opacity-50">
                   {msg.read
                     ? "Read"
                     : msg.sender === currentUserEmail
@@ -269,21 +271,21 @@ const NeedMessages = ({ itemID, itemCreator, currentUserEmail }) => {
             <div ref={messagesEndRef} />
           </div>
 
-          <div className='mt-4 p-2 flex items-center md:p-4 border rounded-md'>
+          <div className="mt-4 p-2 flex items-center md:p-4 border rounded-md">
             <input
-              className='input outline-none border-none focus:outline-none focus:border-none focus:shadow-none shadow-none bg-transparent w-full'
+              className="input outline-none border-none focus:outline-none focus:border-none focus:shadow-none shadow-none bg-transparent w-full"
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               onKeyDown={(e) =>
                 e.key === "Enter" && !e.shiftKey && handleSendMessage()
               }
-              placeholder='Type a message...'
+              placeholder="Type a message..."
             />
             <button
-              className='btn btn-sm md:btn-md btn-primary '
+              className="btn btn-sm md:btn-md btn-primary "
               onClick={handleSendMessage}
             >
-              <FaPaperPlane className='mr-2' /> Send
+              <FaPaperPlane className="mr-2" /> Send
             </button>
           </div>
         </div>
