@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { _backendAPI } from "../../APIs/api";
+import toast from "react-hot-toast";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -40,13 +44,27 @@ const Login = () => {
 
     setIsLoading(true);
     try {
-      // TODO: Implement actual login logic here
-      console.log("Login attempt with:", formData);
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await axios.post(_backendAPI + "/auth/login", {
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (response.data) {
+        localStorage.setItem("token", response.data.token);
+        toast.success("Login successful! Welcome back!");
+        navigate("/");
+      }
+      console.log(response);
     } catch (error) {
+      const errorMessage =
+        error?.response?.data?.message ||
+        error.message ||
+        "Login failed. Please try again.";
+
+      console.log(error);
+      // toast.error(errorMessage);
       setErrors({
-        submit: "Invalid email or password. Please try again.",
+        submit: errorMessage,
       });
     } finally {
       setIsLoading(false);
@@ -59,7 +77,6 @@ const Login = () => {
       ...prev,
       [name]: value,
     }));
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
@@ -81,7 +98,6 @@ const Login = () => {
           )}
 
           <form onSubmit={handleSubmit} className='space-y-4'>
-            {/* Email Field */}
             <div className='form-control'>
               <label className='label'>
                 <span className='label-text'>Email</span>
@@ -108,7 +124,6 @@ const Login = () => {
               )}
             </div>
 
-            {/* Password Field */}
             <div className='form-control'>
               <label className='label'>
                 <span className='label-text'>Password</span>
@@ -142,7 +157,6 @@ const Login = () => {
               )}
             </div>
 
-            {/* Remember Me & Forgot Password */}
             <div className='flex items-center justify-between'>
               <label className='label cursor-pointer'>
                 <input type='checkbox' className='checkbox checkbox-sm mr-2' />
@@ -156,7 +170,6 @@ const Login = () => {
               </Link>
             </div>
 
-            {/* Submit Button */}
             <button
               type='submit'
               className={`btn btn-primary w-full ${isLoading ? "loading" : ""}`}
@@ -166,7 +179,6 @@ const Login = () => {
             </button>
           </form>
 
-          {/* Sign Up Link */}
           <div className='text-center mt-6'>
             <span className='text-base-content/70'>
               Don't have an account?{" "}
