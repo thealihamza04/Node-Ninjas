@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { _backendAPI } from "../../APIs/api";
 import toast from "react-hot-toast";
 import {
@@ -26,6 +26,13 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "instant",
+    });
+  }, []);
 
   const validateForm = () => {
     const newErrors = {};
@@ -128,181 +135,166 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-base-200 px-4 py-8">
-      <div className="card w-full max-w-md bg-base-100 shadow-xl">
-        <div className="card-body p-6 md:p-8">
-          <h2 className="text-2xl font-bold text-center mb-6">
+    <div className='min-h-screen pt-24 pb-4 flex items-center justify-center bg-base-200 px-4'>
+      <div className='w-full max-w-xl bg-base-100 rounded border border-base-300'>
+        <div className='p-8'>
+          <h2 className='text-2xl font-semibold text-base-content text-center mb-8'>
             Create Account
           </h2>
 
           {errors.submit && (
-            <div className="alert alert-error mb-4">
+            <div className='bg-error/10 border border-error/20 text-error px-4 py-3 rounded mb-6'>
               <span>{errors.submit}</span>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className='space-y-6'>
             {/* Full Name Field */}
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Full Name</span>
+            <div className='space-y-2'>
+              <label className='block text-sm font-medium text-base-content'>
+                Full Name
               </label>
-              <div className="relative">
+              <div className='flex items-center gap-2 border border-base-300 rounded px-3 py-2 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary'>
+                <FaUser className='text-base-content/50 flex-shrink-0' />
                 <input
-                  type="text"
-                  name="fullName"
+                  type='text'
+                  name='fullName'
                   value={formData.fullName}
                   onChange={handleChange}
-                  placeholder="Enter your full name"
-                  className={`input input-bordered w-full pl-10 ${
-                    errors.fullName ? "input-error" : ""
+                  placeholder='Enter your full name'
+                  className={`w-full bg-transparent outline-none text-base-content placeholder-base-content/50 ${
+                    errors.fullName ? "text-error" : ""
                   }`}
                 />
-                <FaUser className="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50" />
               </div>
               {errors.fullName && (
-                <label className="label">
-                  <span className="label-text-alt text-error">
-                    {errors.fullName}
-                  </span>
-                </label>
+                <p className='text-sm text-error mt-1'>{errors.fullName}</p>
               )}
             </div>
 
             {/* Email Field */}
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Email</span>
+            <div className='space-y-2'>
+              <label className='block text-sm font-medium text-base-content'>
+                Email
               </label>
-              <div className="relative">
+              <div className='flex items-center gap-2 border border-base-300 rounded px-3 py-2 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary'>
+                <FaEnvelope className='text-base-content/50 flex-shrink-0' />
                 <input
-                  type="email"
-                  name="email"
+                  type='email'
+                  name='email'
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder="Enter your email"
-                  className={`input input-bordered w-full pl-10 ${
-                    errors.email ? "input-error" : ""
+                  placeholder='Enter your email'
+                  className={`w-full bg-transparent outline-none text-base-content placeholder-base-content/50 ${
+                    errors.email ? "text-error" : ""
                   }`}
                 />
-                <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50" />
               </div>
               {errors.email && (
-                <label className="label">
-                  <span className="label-text-alt text-error">
-                    {errors.email}
-                  </span>
-                </label>
+                <p className='text-sm text-error mt-1'>{errors.email}</p>
               )}
             </div>
 
-            {/* Student ID Field */}
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Phone Number</span>
+            {/* Phone Number Field */}
+            <div className='space-y-2'>
+              <label className='block text-sm font-medium text-base-content'>
+                Phone Number
               </label>
-              <div className="relative">
+              <div className='flex items-center gap-2 border border-base-300 rounded px-3 py-2 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary'>
+                <FaIdCard className='text-base-content/50 flex-shrink-0' />
                 <input
-                  type="text"
-                  name="phoneNumber"
+                  type='text'
+                  name='phoneNumber'
                   value={formData.phoneNumber}
                   onChange={handleChange}
-                  placeholder="Enter your Phone Number"
+                  placeholder='Enter your Phone Number'
                   required
-                  className={`input input-bordered w-full pl-10 ${
-                    errors.phoneNumber ? "input-error" : ""
+                  className={`w-full bg-transparent outline-none text-base-content placeholder-base-content/50 ${
+                    errors.phoneNumber ? "text-error" : ""
                   }`}
                 />
-                <FaIdCard className="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50" />
               </div>
               {errors.phoneNumber && (
-                <label className="label">
-                  <span className="label-text-alt text-error">
-                    {errors.phoneNumber}
-                  </span>
-                </label>
+                <p className='text-sm text-error mt-1'>{errors.phoneNumber}</p>
               )}
             </div>
 
             {/* Password Field */}
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Password</span>
+            <div className='space-y-2'>
+              <label className='block text-sm font-medium text-base-content'>
+                Password
               </label>
-              <div className="relative">
+              <div className='flex items-center gap-2 border border-base-300 rounded px-3 py-2 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary'>
+                <FaLock className='text-base-content/50 flex-shrink-0' />
                 <input
                   type={showPassword ? "text" : "password"}
-                  name="password"
+                  name='password'
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder="Create a password"
-                  className={`input input-bordered w-full pl-10 ${
-                    errors.password ? "input-error" : ""
+                  placeholder='Create a password'
+                  className={`w-full bg-transparent outline-none text-base-content placeholder-base-content/50 ${
+                    errors.password ? "text-error" : ""
                   }`}
                 />
-                <FaLock className="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50" />
                 <button
-                  type="button"
+                  type='button'
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/50 hover:text-base-content"
+                  className='text-base-content/50 hover:text-base-content flex-shrink-0'
                 >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
               {errors.password && (
-                <label className="label">
-                  <span className="label-text-alt text-error">
-                    {errors.password}
-                  </span>
-                </label>
+                <p className='text-sm text-error mt-1'>{errors.password}</p>
               )}
             </div>
 
             {/* Confirm Password Field */}
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Confirm Password</span>
+            <div className='space-y-2'>
+              <label className='block text-sm font-medium text-base-content'>
+                Confirm Password
               </label>
-              <div className="relative">
+              <div className='flex items-center gap-2 border border-base-300 rounded px-3 py-2 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary'>
+                <FaLock className='text-base-content/50 flex-shrink-0' />
                 <input
                   type={showConfirmPassword ? "text" : "password"}
-                  name="confirmPassword"
+                  name='confirmPassword'
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  placeholder="Confirm your password"
-                  className={`input input-bordered w-full pl-10 ${
-                    errors.confirmPassword ? "input-error" : ""
+                  placeholder='Confirm your password'
+                  className={`w-full bg-transparent outline-none text-base-content placeholder-base-content/50 ${
+                    errors.confirmPassword ? "text-error" : ""
                   }`}
                 />
-                <FaLock className="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50" />
                 <button
-                  type="button"
+                  type='button'
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/50 hover:text-base-content"
+                  className='text-base-content/50 hover:text-base-content flex-shrink-0'
                 >
                   {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
               {errors.confirmPassword && (
-                <label className="label">
-                  <span className="label-text-alt text-error">
-                    {errors.confirmPassword}
-                  </span>
-                </label>
+                <p className='text-sm text-error mt-1'>
+                  {errors.confirmPassword}
+                </p>
               )}
             </div>
 
             {/* Terms and Conditions */}
-            <div className="form-control">
-              <label className="label cursor-pointer">
+            <div className='space-y-2'>
+              <label className='flex items-center gap-2 cursor-pointer'>
                 <input
-                  type="checkbox"
-                  className="checkbox checkbox-sm mr-2"
+                  type='checkbox'
+                  className='rounded border-base-300 text-primary focus:ring-primary'
                   required
                 />
-                <span className="label-text">
+                <span className='text-sm text-base-content/70'>
                   I agree to the{" "}
-                  <Link to="/terms" className="text-primary hover:underline">
+                  <Link
+                    to='/terms'
+                    className='text-primary hover:text-primary/80 hover:underline'
+                  >
                     Terms and Conditions
                   </Link>
                 </span>
@@ -311,8 +303,10 @@ const Register = () => {
 
             {/* Submit Button */}
             <button
-              type="submit"
-              className={`btn btn-primary w-full ${isLoading ? "loading" : ""}`}
+              type='submit'
+              className={`w-full bg-primary text-primary-content py-2 px-4 rounded hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-colors ${
+                isLoading ? "opacity-70 cursor-not-allowed" : ""
+              }`}
               disabled={isLoading}
             >
               {isLoading ? "Creating Account..." : "Create Account"}
@@ -320,11 +314,14 @@ const Register = () => {
           </form>
 
           {/* Login Link */}
-          <div className="text-center mt-6">
-            <span className="text-base-content/70">
+          <div className='text-center mt-8'>
+            <span className='text-base-content/70'>
               Already have an account?{" "}
             </span>
-            <Link to="/login" className="text-primary hover:underline">
+            <Link
+              to='/login'
+              className='text-primary hover:text-primary/80 hover:underline'
+            >
               Sign in
             </Link>
           </div>

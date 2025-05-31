@@ -19,17 +19,19 @@ import UserDashboard from "./Components/User/UserDashboard";
 
 import PageNotFound from "./Components/404/PageNotFound";
 
-
 // Context Provider
 import ItemsState from "./context/items/ItemsState";
 
 // Error Boundary
 import ErrorBoundary from "./Components/ErrorBoundary/ErrorBoundary";
+import LossItemform from "./Components/Forms/LossItemform";
+import FoundItemform from "./Components/Forms/FoundItemform";
 
 // Route Configuration
 const routes = [
-  { path: "/", element: <HomePage /> },
+  { path: "/", element: <LossItemform /> },
   { path: "/user", element: <UserDashboard /> },
+  { path: "/admin", element: <AdminDashboard /> },
   { path: "/login", element: <Login /> },
   { path: "/register", element: <Register /> },
   { path: "/found", element: <FoundItems /> },
@@ -66,7 +68,6 @@ const App = () => {
         </BrowserRouter>
       </ItemsState>
     </ErrorBoundary>
-
   );
 };
 
