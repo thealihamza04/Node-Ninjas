@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   return (
@@ -21,20 +22,20 @@ const HeroSection = () => {
             </p>
 
             <div className='flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center pt-8 sm:pt-12 px-4 sm:px-0'>
-              <a
-                href='/report-lost'
+              <Link
+                to="/lossitemform"
                 className='btn btn-primary btn-lg w-full sm:w-auto min-w-[200px]'
                 aria-label='Report a lost item'
               >
                 Report Lost Item
-              </a>
-              <a
-                href='/report-found'
+              </Link>
+              <Link
+                to="/founditemform"
                 className='btn btn-outline btn-lg w-full sm:w-auto min-w-[200px]'
                 aria-label='Report a found item'
               >
                 Report Found Item
-              </a>
+              </Link>
             </div>
           </div>
         </div>

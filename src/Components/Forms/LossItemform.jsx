@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FiUpload, FiCalendar, FiMapPin, FiTag, FiPhone, FiFileText, FiImage, FiAlertCircle } from 'react-icons/fi';
+import { FiUpload, FiCalendar, FiMapPin, FiTag, FiFileText, FiImage, FiAlertCircle } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import { _backendAPI } from '../../APIs/api';
 import axios from 'axios';
@@ -9,14 +9,12 @@ import { useNavigate } from 'react-router-dom';
 function LossItemform() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    category: '',
-    contactInfo: '',
-    createdAt: new Date().toISOString().split('T')[0],
-    dateLost: '',
-    description: '',
-    imageUrl: '',
-    location: '',
     name: '',
+    category: '',
+    dateLostFound: '',
+    description: '',
+    location: '',
+    imageUrl: '',
     type: 'Lost'
   });
 
@@ -45,26 +43,18 @@ function LossItemform() {
         return;
       }
 
-      const response = await axios.post(`${_backendAPI}/api/items`, formData, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await axios.post(`${_backendAPI}/api/item`, formData);
 
       console.log('Item submitted successfully:', response.data);
-      
       toast.success('Lost item reported successfully!');
       
       setFormData({
-        category: '',
-        contactInfo: '',
-        createdAt: new Date().toISOString().split('T')[0],
-        dateLost: '',
-        description: '',
-        imageUrl: '',
-        location: '',
         name: '',
+        category: '',
+        dateLostFound: '',
+        description: '',
+        location: '',
+        imageUrl: '',
         type: 'Lost'
       });
 
@@ -194,7 +184,7 @@ function LossItemform() {
               <motion.div 
                 className="form-control"
                 variants={fieldVariants}
-                animate={focusedField === 'dateLost' ? 'focused' : 'unfocused'}
+                animate={focusedField === 'dateLostFound' ? 'focused' : 'unfocused'}
               >
                 <label className="label">
                   <span className="label-text font-medium text-[#0B3B5B]">Date Lost</span>
@@ -202,10 +192,10 @@ function LossItemform() {
                 <div className="relative group">
                   <input
                     type="date"
-                    name="dateLost"
-                    value={formData.dateLost}
+                    name="dateLostFound"
+                    value={formData.dateLostFound}
                     onChange={handleChange}
-                    onFocus={() => setFocusedField('dateLost')}
+                    onFocus={() => setFocusedField('dateLostFound')}
                     onBlur={() => setFocusedField(null)}
                     className="input input-bordered w-full pl-10 transition-all duration-300 hover:border-[#2E7AB8] focus:border-[#2E7AB8] focus:ring-2 focus:ring-[#2E7AB8]/20"
                     required
@@ -215,58 +205,30 @@ function LossItemform() {
               </motion.div>
             </div>
 
-            {/* Location and Contact Fields Row */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Location Field */}
-              <motion.div 
-                className="form-control"
-                variants={fieldVariants}
-                animate={focusedField === 'location' ? 'focused' : 'unfocused'}
-              >
-                <label className="label">
-                  <span className="label-text font-medium text-[#0B3B5B]">Location Lost</span>
-                </label>
-                <div className="relative group">
-                  <input
-                    type="text"
-                    name="location"
-                    value={formData.location}
-                    onChange={handleChange}
-                    onFocus={() => setFocusedField('location')}
-                    onBlur={() => setFocusedField(null)}
-                    placeholder="Enter location where item was lost"
-                    className="input input-bordered w-full pl-10 transition-all duration-300 hover:border-[#2E7AB8] focus:border-[#2E7AB8] focus:ring-2 focus:ring-[#2E7AB8]/20"
-                    required
-                  />
-                  <FiMapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2E7AB8] group-hover:text-[#0B3B5B] transition-colors duration-300" />
-                </div>
-              </motion.div>
-
-              {/* Contact Info Field */}
-              <motion.div 
-                className="form-control"
-                variants={fieldVariants}
-                animate={focusedField === 'contactInfo' ? 'focused' : 'unfocused'}
-              >
-                <label className="label">
-                  <span className="label-text font-medium text-[#0B3B5B]">Contact Information</span>
-                </label>
-                <div className="relative group">
-                  <input
-                    type="text"
-                    name="contactInfo"
-                    value={formData.contactInfo}
-                    onChange={handleChange}
-                    onFocus={() => setFocusedField('contactInfo')}
-                    onBlur={() => setFocusedField(null)}
-                    placeholder="Enter your contact information"
-                    className="input input-bordered w-full pl-10 transition-all duration-300 hover:border-[#2E7AB8] focus:border-[#2E7AB8] focus:ring-2 focus:ring-[#2E7AB8]/20"
-                    required
-                  />
-                  <FiPhone className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2E7AB8] group-hover:text-[#0B3B5B] transition-colors duration-300" />
-                </div>
-              </motion.div>
-            </div>
+            {/* Location Field */}
+            <motion.div 
+              className="form-control"
+              variants={fieldVariants}
+              animate={focusedField === 'location' ? 'focused' : 'unfocused'}
+            >
+              <label className="label">
+                <span className="label-text font-medium text-[#0B3B5B]">Location Lost</span>
+              </label>
+              <div className="relative group">
+                <input
+                  type="text"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleChange}
+                  onFocus={() => setFocusedField('location')}
+                  onBlur={() => setFocusedField(null)}
+                  placeholder="Enter location where item was lost"
+                  className="input input-bordered w-full pl-10 transition-all duration-300 hover:border-[#2E7AB8] focus:border-[#2E7AB8] focus:ring-2 focus:ring-[#2E7AB8]/20"
+                  required
+                />
+                <FiMapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2E7AB8] group-hover:text-[#0B3B5B] transition-colors duration-300" />
+              </div>
+            </motion.div>
 
             {/* Description Field */}
             <motion.div 
@@ -329,7 +291,7 @@ function LossItemform() {
               ) : (
                 <>
                   <FiUpload className="w-5 h-5" />
-                  Submit Report
+                  Submit Lost Item
                 </>
               )}
             </motion.button>
