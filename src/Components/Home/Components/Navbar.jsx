@@ -19,7 +19,7 @@ const Navbar = () => {
   const navLinks = [
     { path: "/lost", label: "Lost Items" },
     { path: "/found", label: "Found Items" },
-    { path: "/admin", label: "Dashboard" },
+    { path: "/user", label: "Dashboard" },
   ];
 
   const navVariants = {
