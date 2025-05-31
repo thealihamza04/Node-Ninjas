@@ -26,7 +26,7 @@ function FoundItemform() {
     description: "",
     location: "",
     imageUrl: "",
-    user_email: "",
+    user_email: getUserEmailFromToken(),
     type: "Found",
   });
 
