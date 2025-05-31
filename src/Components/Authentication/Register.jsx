@@ -101,6 +101,8 @@ const Register = () => {
 
       if (response.data.success) {
         localStorage.setItem("token", response.data.token);
+        // Dispatch auth state change event
+        window.dispatchEvent(new Event("authStateChange"));
         toast.success("Registration successful! You are now logged in.");
         navigate("/");
       }
