@@ -13,6 +13,26 @@ const Navbar = () => {
     localStorage.getItem("token") ? true : false
   );
 
+  // Check for token in localStorage on mount and when auth state changes
+  useEffect(() => {
+    const checkToken = () => {
+      const token = localStorage.getItem("token");
+      setIsUserLoggedIn(!!token);
+    };
+
+    // Check on mount
+    checkToken();
+
+    // Listen for auth state changes
+    window.addEventListener("authStateChange", checkToken);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener("authStateChange", checkToken);
+    };
+  }, []);
+
+  // Handle scroll effect
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -29,6 +49,9 @@ const Navbar = () => {
 
     // Update state
     setIsUserLoggedIn(false);
+
+    // Dispatch auth state change event
+    window.dispatchEvent(new Event("authStateChange"));
 
     // Show success message
     toast.success("Logged out successfully");
