@@ -58,6 +58,8 @@ const Login = () => {
 
       if (response.data) {
         localStorage.setItem("token", response.data.token);
+        // Dispatch auth state change event
+        window.dispatchEvent(new Event("authStateChange"));
         toast.success("Login successful! Welcome back!");
         navigate("/");
       }

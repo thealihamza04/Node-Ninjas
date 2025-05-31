@@ -168,7 +168,7 @@ const ItemDetail = () => {
       </div>
       <ItemMessages
         itemID={itemData?._id}
-        itemCreator={itemData?.user_id}
+        itemCreator={itemData?.user_email}
         currentUserEmail={currentUserEmail}
       />
     </div>
