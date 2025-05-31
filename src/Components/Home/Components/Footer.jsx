@@ -1,156 +1,211 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import {
-  FaFacebookF,
-  FaTwitter,
-  FaInstagram,
-  FaLinkedinIn,
-  FaEnvelope,
-  FaPhone,
-  FaMapMarkerAlt,
-} from "react-icons/fa";
 
 const Footer = () => {
-  const currentYear = new Date().getFullYear();
-
-  const socialLinks = [
-    {
-      name: "Facebook",
-      icon: <FaFacebookF />,
-      url: "https://facebook.com",
-    },
-    {
-      name: "Twitter",
-      icon: <FaTwitter />,
-      url: "https://twitter.com",
-    },
-    {
-      name: "Instagram",
-      icon: <FaInstagram />,
-      url: "https://instagram.com",
-    },
-    {
-      name: "LinkedIn",
-      icon: <FaLinkedinIn />,
-      url: "https://linkedin.com",
-    },
-  ];
-
-  const quickLinks = [
-    { name: "About Us", url: "/about" },
-    { name: "Contact", url: "/contact" },
-    { name: "Privacy Policy", url: "/privacy" },
-    { name: "Terms of Service", url: "/terms" },
-  ];
-
   return (
-    <footer className='bg-base-200'>
-      <div className='max-w-7xl mx-auto px-4 py-12'>
-        <div className='grid grid-cols-1 md:grid-cols-4 gap-8'>
-          {/* Brand Section */}
-          <div className='space-y-4'>
-            <h3 className='text-2xl font-bold text-primary'>NodeNinjas</h3>
-            <p className='text-base-content/70'>
-              Helping you find your lost items and return found items to their
-              rightful owners.
-            </p>
-            <div className='flex space-x-4'>
-              {socialLinks.map((social) => (
-                <a
-                  key={social.name}
-                  href={social.url}
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  className='btn btn-ghost btn-circle btn-sm hover:bg-primary hover:text-primary-content'
-                  aria-label={social.name}
-                >
-                  {social.icon}
-                </a>
-              ))}
+    <div>
+      <section className='py-10 bg-base-300 sm:pt-16 lg:pt-24'>
+        <div className='px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl'>
+          <div className='grid grid-cols-2 md:grid-cols-4 gap-y-12 gap-x-12'>
+            <div>
+              <div className='text-2xl font-serif font-bold text-primary'>
+                UMT Lost/Found
+              </div>
+
+              <ul className='mt-8 space-y-4'>
+                <li>
+                  <a
+                    href='/about'
+                    title=''
+                    className='text-base-content/70 transition-all duration-200 hover:text-primary focus:text-primary'
+                  >
+                    About Us
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    href='/how-it-works'
+                    title=''
+                    className='text-base-content/70 transition-all duration-200 hover:text-primary focus:text-primary'
+                  >
+                    How It Works
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    href='/success-stories'
+                    title=''
+                    className='text-base-content/70 transition-all duration-200 hover:text-primary focus:text-primary'
+                  >
+                    Success Stories
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    href='/contact'
+                    title=''
+                    className='text-base-content/70 transition-all duration-200 hover:text-primary focus:text-primary'
+                  >
+                    Contact Us
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <p className='text-lg font-semibold text-base-content'>
+                Quick Links
+              </p>
+
+              <ul className='mt-8 space-y-4'>
+                <li>
+                  <a
+                    href='/lost-items'
+                    title=''
+                    className='text-base-content/70 transition-all duration-200 hover:text-primary focus:text-primary'
+                  >
+                    Lost Items
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    href='/found-items'
+                    title=''
+                    className='text-base-content/70 transition-all duration-200 hover:text-primary focus:text-primary'
+                  >
+                    Found Items
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    href='/report-lost'
+                    title=''
+                    className='text-base-content/70 transition-all duration-200 hover:text-primary focus:text-primary'
+                  >
+                    Report Lost Item
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    href='/report-found'
+                    title=''
+                    className='text-base-content/70 transition-all duration-200 hover:text-primary focus:text-primary'
+                  >
+                    Report Found Item
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <p className='text-lg font-semibold text-base-content'>
+                Resources
+              </p>
+
+              <ul className='mt-8 space-y-4'>
+                <li>
+                  <a
+                    href='/faq'
+                    title=''
+                    className='text-base-content/70 transition-all duration-200 hover:text-primary focus:text-primary'
+                  >
+                    FAQ
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    href='/safety-tips'
+                    title=''
+                    className='text-base-content/70 transition-all duration-200 hover:text-primary focus:text-primary'
+                  >
+                    Safety Tips
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    href='/guidelines'
+                    title=''
+                    className='text-base-content/70 transition-all duration-200 hover:text-primary focus:text-primary'
+                  >
+                    Guidelines
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    href='/blog'
+                    title=''
+                    className='text-base-content/70 transition-all duration-200 hover:text-primary focus:text-primary'
+                  >
+                    Blog
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <p className='text-lg font-semibold text-base-content'>Support</p>
+
+              <ul className='mt-8 space-y-4'>
+                <li>
+                  <a
+                    href='/help-center'
+                    title=''
+                    className='text-base-content/70 transition-all duration-200 hover:text-primary focus:text-primary'
+                  >
+                    Help Center
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    href='/contact-support'
+                    title=''
+                    className='text-base-content/70 transition-all duration-200 hover:text-primary focus:text-primary'
+                  >
+                    Contact Support
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    href='/privacy-policy'
+                    title=''
+                    className='text-base-content/70 transition-all duration-200 hover:text-primary focus:text-primary'
+                  >
+                    Privacy Policy
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    href='/terms'
+                    title=''
+                    className='text-base-content/70 transition-all duration-200 hover:text-primary focus:text-primary'
+                  >
+                    Terms of Service
+                  </a>
+                </li>
+              </ul>
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h4 className='text-lg font-semibold text-primary mb-4'>
-              Quick Links
-            </h4>
-            <ul className='space-y-2'>
-              {quickLinks.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    to={link.url}
-                    className='text-base-content/70 hover:text-primary transition-colors duration-300'
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Contact Info */}
-          <div>
-            <h4 className='text-lg font-semibold text-primary mb-4'>
-              Contact Us
-            </h4>
-            <ul className='space-y-3'>
-              <li className='flex items-center space-x-3'>
-                <FaEnvelope className='text-primary' />
-                <a
-                  href='mailto:support@nodeninjas.com'
-                  className='text-base-content/70 hover:text-primary transition-colors duration-300'
-                >
-                  support@nodeninjas.com
-                </a>
-              </li>
-              <li className='flex items-center space-x-3'>
-                <FaPhone className='text-primary' />
-                <a
-                  href='tel:+1234567890'
-                  className='text-base-content/70 hover:text-primary transition-colors duration-300'
-                >
-                  +1 (234) 567-890
-                </a>
-              </li>
-              <li className='flex items-center space-x-3'>
-                <FaMapMarkerAlt className='text-primary' />
-                <span className='text-base-content/70'>
-                  123 University Ave, Campus City
-                </span>
-              </li>
-            </ul>
-          </div>
-
-          {/* Newsletter */}
-          <div>
-            <h4 className='text-lg font-semibold text-primary mb-4'>
-              Stay Updated
-            </h4>
-            <p className='text-base-content/70 mb-4'>
-              Subscribe to our newsletter for updates and news.
+          <div className='mt-12 pt-8 border-t border-base-300'>
+            <p className='text-base text-base-content/70 text-center'>
+              © {new Date().getFullYear()} UMT Lost & Found. All rights
+              reserved.
             </p>
-            <form className='space-y-2'>
-              <input
-                type='email'
-                placeholder='Enter your email'
-                className='input input-bordered w-full bg-base-100 focus:border-primary'
-              />
-              <button type='submit' className='btn btn-primary w-full'>
-                Subscribe
-              </button>
-            </form>
           </div>
         </div>
-
-        {/* Copyright */}
-        <div className='border-t border-base-300 mt-12 pt-8 text-center'>
-          <p className='text-base-content/70'>
-            © {currentYear} NodeNinjas. All rights reserved.
-          </p>
-        </div>
-      </div>
-    </footer>
+      </section>
+    </div>
   );
 };
 

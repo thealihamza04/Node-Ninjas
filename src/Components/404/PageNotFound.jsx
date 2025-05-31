@@ -4,7 +4,7 @@ import { FaHome, FaSearch, FaArrowLeft } from "react-icons/fa";
 
 const PageNotFound = () => {
   return (
-    <div className='min-h-screen bg-base-200 flex items-center justify-center px-4'>
+    <div className='min-h-screen py-28 bg-base-200 flex items-center justify-center px-4'>
       <div className='max-w-2xl w-full text-center'>
         {/* 404 Illustration */}
         <div className='mb-8'>
