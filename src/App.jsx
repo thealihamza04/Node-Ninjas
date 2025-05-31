@@ -19,7 +19,6 @@ import UserDashboard from "./Components/User/UserDashboard";
 
 import PageNotFound from "./Components/404/PageNotFound";
 
-
 // Context Provider
 import ItemsState from "./context/items/ItemsState";
 
@@ -30,6 +29,7 @@ import ErrorBoundary from "./Components/ErrorBoundary/ErrorBoundary";
 const routes = [
   { path: "/", element: <HomePage /> },
   { path: "/user", element: <UserDashboard /> },
+  { path: "/admin", element: <AdminDashboard /> },
   { path: "/login", element: <Login /> },
   { path: "/register", element: <Register /> },
   { path: "/found", element: <FoundItems /> },
@@ -66,7 +66,6 @@ const App = () => {
         </BrowserRouter>
       </ItemsState>
     </ErrorBoundary>
-
   );
 };
 
