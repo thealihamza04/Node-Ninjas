@@ -40,7 +40,9 @@ const NeedMessages = ({ itemID, itemCreator, currentUserEmail }) => {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const response = await axios.get(`${_backendAPI}/${itemID}`);
+        const response = await axios.get(
+          `${_backendAPI}/api/messages/${itemID}`
+        );
         setAllMessages(response.data);
         updateUserEmailList(response.data);
       } catch (err) {
