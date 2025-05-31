@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ItemCard from "./ItemCard";
+import { useContext } from "react";
+import ItemsContext from "../../../context/items/ItemsContext";
 
 // Separate SectionHeader component
 const SectionHeader = ({ title, viewAllLink }) => {
@@ -50,7 +52,7 @@ const ItemsSection = ({ title, items, type, viewAllLink }) => {
       <SectionHeader title={title} viewAllLink={viewAllLink} />
       <div className='grid gap-3 sm:gap-6'>
         {items.map((item, index) => (
-          <div key={item.id}>
+          <div key={item._id}>
             <ItemCard item={item} type={type} index={index} linkPrefix='' />
           </div>
         ))}
@@ -61,8 +63,9 @@ const ItemsSection = ({ title, items, type, viewAllLink }) => {
 
 // Main component
 const LatestListing = () => {
-  const [isLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+  const { lostItems, foundItems } = useContext(ItemsContext);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -74,65 +77,32 @@ const LatestListing = () => {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // Sample data - replace with actual data from your backend
-  const lostItems = [
-    {
-      id: 1,
-      title: "MacBook Pro",
-      category: "Electronics",
-      location: "Library",
-      date: "2024-03-15",
-      image:
-        "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1026&q=80",
-    },
-    {
-      id: 2,
-      title: "Student ID Card",
-      category: "Documents",
-      location: "Academic Block",
-      date: "2024-03-14",
-      image:
-        "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
-    },
-  ];
-
-  const foundItems = [
-    {
-      id: 3,
-      title: "Wireless Earbuds",
-      category: "Electronics",
-      location: "Cafeteria",
-      date: "2024-03-15",
-      image:
-        "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1032&q=80",
-    },
-    {
-      id: 4,
-      title: "Water Bottle",
-      category: "Accessories",
-      location: "Sports Complex",
-      date: "2024-03-14",
-      image:
-        "https://images.unsplash.com/photo-1602143407151-7111542de6e8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
-    },
-  ];
+  useEffect(() => {
+    if (lostItems.length > 0 || foundItems.length > 0) {
+      setIsLoading(false);
+    }
+  }, [lostItems, foundItems]);
 
   if (isLoading) {
     return <LoadingSkeleton />;
   }
+
+  // Get latest 2 items for each section
+  const latestLostItems = lostItems.slice(0, 2);
+  const latestFoundItems = foundItems.slice(0, 2);
 
   return (
     <div className='max-w-6xl mx-auto px-2 sm:px-4'>
       <div className='grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8'>
         <ItemsSection
           title='Lost Items'
-          items={lostItems}
+          items={latestLostItems}
           type='lost'
           viewAllLink='/lost'
         />
         <ItemsSection
           title='Found Items'
-          items={foundItems}
+          items={latestFoundItems}
           type='found'
           viewAllLink='/found'
         />
