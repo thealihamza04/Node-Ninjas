@@ -29,7 +29,7 @@ import ErrorBoundary from "./Components/ErrorBoundary/ErrorBoundary";
 // Route Configuration
 const routes = [
   { path: "/", element: <HomePage /> },
-  { path: "/admin", element: <AdminDashboard /> },
+  { path: "/user", element: <UserDashboard /> },
   { path: "/login", element: <Login /> },
   { path: "/register", element: <Register /> },
   { path: "/found", element: <FoundItems /> },
