@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import { FiUpload, FiCalendar, FiMapPin, FiTag, FiPhone, FiFileText, FiImage, FiAlertCircle } from 'react-icons/fi';
 import { motion } from 'framer-motion';
+import { _backendAPI } from '../../APIs/api';
+import axios from 'axios';
+import { toast } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 function FoundItemform() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     category: '',
     contactInfo: '',
@@ -12,10 +17,12 @@ function FoundItemform() {
     imageUrl: '',
     location: '',
     name: '',
-    type: 'FOUND'
+    type: 'Found'  // Changed to match API format
   });
 
   const [focusedField, setFocusedField] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,10 +32,63 @@ function FoundItemform() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
-    // Handle form submission here
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      // Check if all required fields are filled
+      const requiredFields = ['name', 'category', 'dateFound', 'location', 'contactInfo', 'description'];
+      const missingFields = requiredFields.filter(field => !formData[field]);
+      
+      if (missingFields.length > 0) {
+        throw new Error(`Please fill in all required fields: ${missingFields.join(', ')}`);
+      }
+
+      const token = localStorage.getItem('token');
+      if (!token) {
+        toast.error('Please login to report a found item');
+        navigate('/login');
+        return;
+      }
+
+      const response = await axios.post(`${_backendAPI}/item`, formData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      console.log('Item submitted successfully:', response.data);
+      
+      // Show success message
+      toast.success('Found item reported successfully!');
+      
+      // Reset form after successful submission
+      setFormData({
+        category: '',
+        contactInfo: '',
+        createdAt: new Date().toISOString().split('T')[0],
+        dateFound: '',
+        description: '',
+        imageUrl: '',
+        location: '',
+        name: '',
+        type: 'Found'
+      });
+
+      // Navigate to found items page
+      navigate('/found');
+      
+    } catch (err) {
+      console.error('Error submitting item:', err);
+      const errorMessage = err.response?.data?.message || err.message || 'Failed to submit item. Please try again.';
+      setError(errorMessage);
+      toast.error(errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const containerVariants = {
@@ -77,6 +137,12 @@ function FoundItemform() {
             <p className="text-[#2E7AB8]">Help return this item to its rightful owner</p>
           </div>
           
+          {error && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-600">
+              {error}
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Name Field */}
             <motion.div 
@@ -261,12 +327,22 @@ function FoundItemform() {
             {/* Submit Button */}
             <motion.button
               type="submit"
-              className="btn bg-[#0B3B5B] hover:bg-[#2E7AB8] text-white w-full mt-8 gap-2 hover:scale-[1.02] transition-transform duration-300"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+              disabled={isSubmitting}
+              className={`btn bg-[#0B3B5B] hover:bg-[#2E7AB8] text-white w-full mt-8 gap-2 hover:scale-[1.02] transition-transform duration-300 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
+              whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
+              whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
             >
-              <FiUpload className="w-5 h-5" />
-              Submit Found Item
+              {isSubmitting ? (
+                <>
+                  <span className="loading loading-spinner"></span>
+                  Submitting...
+                </>
+              ) : (
+                <>
+                  <FiUpload className="w-5 h-5" />
+                  Submit Found Item
+                </>
+              )}
             </motion.button>
           </form>
         </div>

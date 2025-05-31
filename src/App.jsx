@@ -30,7 +30,7 @@ import FoundItemform from "./Components/Forms/FoundItemform";
 
 // Route Configuration
 const routes = [
-  { path: "/", element: <HomePage /> },
+  { path: "/", element: <LossItemform /> },
   { path: "/user", element: <UserDashboard /> },
   { path: "/login", element: <Login /> },
   { path: "/register", element: <Register /> },
